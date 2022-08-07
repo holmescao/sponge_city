@@ -161,7 +161,7 @@ class Application(QMainWindow, Ui_MainWindow):
         F1.axes1.plot(xx_pred,pred,color='r',lw=2,linestyle="-",label="仿真值")
         if obs is not None:
             # F1.axes1.plot(xx_obs,pred,color='g',lw=2,linestyle=".",label="观测值")
-            F1.axes1.plot(xx_obs,pred,"o",color='g',lw=1.5,label="观测值")
+            F1.axes1.plot(xx_obs,pred,"o",color='g',lw=1,label="观测值")
             
         F1.axes1.legend(fontsize=fs-2)
         F1.axes1.set_xlabel(u"时间 (min)", fontsize=fs-2)
