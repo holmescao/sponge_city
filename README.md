@@ -15,6 +15,8 @@
 
 ## 环境安装
 ```python
+conda create -n SC python=3.7
+conda activate SC
 pip install -r requirements.txt
 ```
 ## 执行
