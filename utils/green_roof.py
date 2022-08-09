@@ -49,13 +49,13 @@ class GreenRoof:
         self.psi2 = 320.2869   #土壤层表面水分入渗公式中的土壤层吸力水头44.1493
         
         # 文件路径
-        self.observed_filepath = observed_file_path
+        self.observed_file_path = observed_file_path
         self.weather_file_path = weather_file_path
     
     @property
     def get_observed_data(self):
         #输入实测出流数据,仅包括出流量不为0的数据
-        data = np.loadtxt(self.observed_filepath)
+        data = np.loadtxt(self.observed_file_path)
         self.Qnumberobs = data[:, 0]  # 实测出流流量的对应分钟序号
         self.q3obs = data[:, 1]  # 实测出流流量(仅包括不为0的数据），mm/hr
     

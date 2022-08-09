@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow,QFileDialog,QMessageBox,QG
 # from PySide6.QtWidgets import QApplication,QMainWindow,QFileDialog,QMessageBox,QGraphicsScene
 # from PyQt6.QtGui import QPixmap
 from PyQt5.QtCore import Qt
-from sponge_city import Ui_MainWindow # 导入主窗口
+from sponge_city_latest import Ui_MainWindow # 导入主窗口
 from utils.green_roof import GreenRoof                   # 导入要执行的算法
 
 # matplotlib.use("Qt5Agg")
@@ -22,10 +22,17 @@ class Application(QMainWindow, Ui_MainWindow):
         super(Application, self).__init__(parent)
         self.setupUi(self)             # 创建界面
         
+        """实例化"""
+        # 实例化绿色屋顶模型
+        self.GreenRoof = GreenRoof("","")
+        
         """信号和槽函数部分"""
         # 选择观测数据文件        
         self.action_open_observed_file.triggered.connect(self.open_observed_file)
         self.action_open_weather_file.triggered.connect(self.open_weather_file)
+        
+        # 参数更新
+        self.pushButton_greenroof_ok.clicked.connect(self.upate_params) # 确认
         
         self.action_sim_green_roof.triggered.connect(self.green_roof_sim) # 仿真
         self.action_sim_and_val_green_roof.triggered.connect(self.green_roof_sim_and_val) # 仿真&验证
@@ -57,18 +64,17 @@ class Application(QMainWindow, Ui_MainWindow):
             "数据文件格式必须为'*.txt'！")
             return 
 
-    @property
     def upate_params(self):
         # TODO：分离到green_roof_config.py文件中
         # ***************** initialization ******************
-        self.GreenRoof.d1_0 = self.d1_0.value()                # initial depth of water stored on the surface (mm)
+        # self.GreenRoof.d1_0 = self.d1_0.value()                # initial depth of water stored on the surface (mm)
         self.GreenRoof.xita2_0 = self.xita2_0.value()           # soil layer initial moisture content (volume of water / total volume of soil)
         self.GreenRoof.d3_0 = self.d3_0.value()    # initial depth of water in the storage layer (mm)
-        self.GreenRoof.F_0 = self.F_0.value()   # initial accumulative infiltraion of surface water into the soil layer (mm),500(20200521)0500
+        # self.GreenRoof.F_0 = self.F_0.value()   # initial accumulative infiltraion of surface water into the soil layer (mm),500(20200521)0500
 
         # =========== the Design parameters ============
-        self.GreenRoof.chang = self.chang.value()                 # 绿色屋顶长度, mm
-        self.GreenRoof.kuan = self.kuan.value()                   # 绿色屋顶宽度, mm
+        # self.GreenRoof.chang = self.chang.value()                 # 绿色屋顶长度, mm
+        # self.GreenRoof.kuan = self.kuan.value()                   # 绿色屋顶宽度, mm
         self.GreenRoof.D1 = self.D1.value()                       #溢流层深度，mm，注：论文里未注明溢流层深度
         self.GreenRoof.D2 = self.D2.value()                       #基质层深度，mm
         self.GreenRoof.D3 = self.D3.value()                       #蓄水层深度,mm
@@ -82,8 +88,8 @@ class Application(QMainWindow, Ui_MainWindow):
         # self.Tstep = 1/60               # time step (hr),min
 
         #设置的常数
-        self.GreenRoof.albedo = self.albedo.value()  #表面反射率
-        self.GreenRoof.e0 = self.e0.value()     #0℃水的饱和蒸气压，kpa
+        # self.GreenRoof.albedo = self.albedo.value()  #表面反射率
+        # self.GreenRoof.e0 = self.e0.value()     #0℃水的饱和蒸气压，kpa
         #z00 = 0.01   #地表有效粗糙长度，m
         #z = 2  #参考高度
 
@@ -94,11 +100,13 @@ class Application(QMainWindow, Ui_MainWindow):
         self.GreenRoof.phi3 = self.phi3.value()    #砾石层孔隙率
         self.GreenRoof.C3D = self.C3D.value()     #孔流系数0.105,0.148,5.65
         self.GreenRoof.eta3D = self.eta3D.value()  #孔流指数，原1.865,1.93,0.9
-        self.GreenRoof.C1 = self.C1.value() * 1e-8        #砾石层水分蒸发的空气动力学导率 # TODO:注意要x 1e-8
+        # self.GreenRoof.C1 = self.C1.value() * 1e-8        #砾石层水分蒸发的空气动力学导率 # TODO:注意要x 1e-8
         self.GreenRoof.xitacb = self.xitacb.value()    #土壤含水量大于xitacb时，植物蒸腾不受水分限制,0.28#20211223
         self.GreenRoof.Ksat = self.Ksat.value()     #土壤层基质流饱和导水率，mm/hr312.6044，231.72
         self.GreenRoof.HCO = self.HCO.value()   #土壤层下部水分渗出公式中的导水衰减常数34.5439
         self.GreenRoof.psi2 = self.psi2.value()   #土壤层表面水分入渗公式中的土壤层吸力水头44.1493
+        # print("参数更新完毕")
+        # print("self.GreenRoof.xitaFC:,%.4f" % (self.GreenRoof.xitaFC))
         
     def green_roof_sim(self):
         # 判断是否选择了路径，若无，则要弹窗
@@ -109,11 +117,9 @@ class Application(QMainWindow, Ui_MainWindow):
             '执行 仿真 前，请先选择数据文件，气象是必选的）！')
             return 
         
-        # 实例化绿色屋顶模型
-        self.GreenRoof = GreenRoof("",self.weather_file_path)
+        # 天气文件赋值
+        self.GreenRoof.weather_file_path = self.weather_file_path
         
-        """参数赋值"""
-        self.upate_params
         """仿真，并返回结果"""
         q3 = self.GreenRoof.sim
         
@@ -130,11 +136,11 @@ class Application(QMainWindow, Ui_MainWindow):
             '错误',
             '执行 仿真&验证 前，请先选择数据文件，气象和实测都是必选的）！')
             return 
-        # 实例化绿色屋顶模型
-        self.GreenRoof = GreenRoof(self.observed_file_path,self.weather_file_path)
         
-        """参数赋值"""
-        self.upate_params
+        # 天气和观测文件赋值
+        self.GreenRoof.observed_file_path = self.observed_file_path
+        self.GreenRoof.weather_file_path = self.weather_file_path
+        
         """仿真，并返回结果"""
         q3 = self.GreenRoof.sim
         
