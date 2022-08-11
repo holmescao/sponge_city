@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'sponge_city_latest.ui'
+## Form generated from reading UI file 'sponge_city_2022年08月11日 copy.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.3.1
 ##
