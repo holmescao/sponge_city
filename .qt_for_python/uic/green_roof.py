@@ -17,8 +17,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractButton, QApplication, QDialog, QDialogButtonBox,
     QDoubleSpinBox, QGridLayout, QHBoxLayout, QLabel,
-    QPushButton, QSizePolicy, QSpacerItem, QTabWidget,
-    QVBoxLayout, QWidget)
+    QSizePolicy, QSpacerItem, QTabWidget, QVBoxLayout,
+    QWidget)
 
 class Ui_Greenroof(object):
     def setupUi(self, Greenroof):
@@ -432,16 +432,11 @@ class Ui_Greenroof(object):
 
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.pushButton_greenroof_ok = QDialogButtonBox(Greenroof)
-        self.pushButton_greenroof_ok.setObjectName(u"pushButton_greenroof_ok")
-        self.pushButton_greenroof_ok.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
+        self.buttonBox_greenroof_ok_cancel = QDialogButtonBox(Greenroof)
+        self.buttonBox_greenroof_ok_cancel.setObjectName(u"buttonBox_greenroof_ok_cancel")
+        self.buttonBox_greenroof_ok_cancel.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Help|QDialogButtonBox.Ok)
 
-        self.horizontalLayout_4.addWidget(self.pushButton_greenroof_ok)
-
-        self.pushButton_greenroof_help = QPushButton(Greenroof)
-        self.pushButton_greenroof_help.setObjectName(u"pushButton_greenroof_help")
-
-        self.horizontalLayout_4.addWidget(self.pushButton_greenroof_help)
+        self.horizontalLayout_4.addWidget(self.buttonBox_greenroof_ok_cancel)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout_4)
@@ -459,7 +454,7 @@ class Ui_Greenroof(object):
     # setupUi
 
     def retranslateUi(self, Greenroof):
-        Greenroof.setWindowTitle(QCoreApplication.translate("Greenroof", u"Dialog", None))
+        Greenroof.setWindowTitle(QCoreApplication.translate("Greenroof", u"\u7eff\u8272\u5c4b\u9876", None))
         self.label_5.setText(QCoreApplication.translate("Greenroof", u"\u84c4\u6c34\u5c42\u6c34\u6df1", None))
         self.label_14.setText(QCoreApplication.translate("Greenroof", u"\u84c4\u6c34\u5c42\u6df1\u5ea6", None))
         self.label_15.setText(QCoreApplication.translate("Greenroof", u"<html><head/><body><p>\u84c4\u6c34\u5c42\u6700\u5c0f<br/>\u53ef\u51fa\u6d41\u6df1\u5ea6</p></body></html>", None))
@@ -480,6 +475,5 @@ class Ui_Greenroof(object):
         self.label_37.setText(QCoreApplication.translate("Greenroof", u"\u6ea2\u6d41\u5c42\u6df1\u5ea6", None))
         self.label_38.setText(QCoreApplication.translate("Greenroof", u"\u7a7a\u9699\u7387", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_6), QCoreApplication.translate("Greenroof", u"\u8868\u5c42", None))
-        self.pushButton_greenroof_help.setText(QCoreApplication.translate("Greenroof", u"\u5e2e\u52a9", None))
     # retranslateUi
 

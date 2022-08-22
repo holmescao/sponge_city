@@ -1,4 +1,6 @@
 # TODO: 有些无法在qt designer完成的事情，需要写代码完成，所以最终还是全靠写代码来设计吧！
+import json
+import yaml
 import numpy as np
 import pandas as pd
 import datetime
@@ -18,6 +20,7 @@ from green_roof import Ui_Greenroof # 导入绿色屋顶输入界面
 from sim_dates import Ui_SimDates # 导入时间选择界面
 """================= 导入窗口================="""
 from utils.green_roof import GreenRoof                   # 导入要执行的算法
+from utils.general_functions import save_dict_to_yaml
 
 # matplotlib.use("Qt5Agg")
 plt.rcParams['font.family'] = 'sans-serif'
@@ -115,9 +118,6 @@ class Application(QMainWindow, Ui_MainWindow):
 
         return True if data_num == time_num else False
             
-            
-        
-    
     def select_haimian(self, item):
         # ["绿色屋顶","渗透铺装", "下凹式绿地", "生物滞留池"]
         if self.haimain_list[item.row()] == "绿色屋顶":
@@ -131,7 +131,8 @@ class Application(QMainWindow, Ui_MainWindow):
         green_roof_Dialog = GreenroofInput(self) # !得把self传进去，否则不会保持窗口
         # 收到确认信号后，更新参数
         # green_roof_Dialog.pushButton_greenroof_ok.clicked.connect(self.upate_params)
-        green_roof_Dialog.pushButton_greenroof_ok.clicked.connect(lambda: self.upate_params(green_roof_Dialog,))
+        green_roof_Dialog.accepted.connect(lambda: self.upate_params(green_roof_Dialog,))
+        # green_roof_Dialog.pushButton_greenroof_ok.clicked.connect(lambda: self.upate_params(green_roof_Dialog,))
         # green_roof_Dialog.Signal_updateparams.connect(self.upate_params)
         green_roof_Dialog.show() # 打开窗口
     
@@ -206,6 +207,7 @@ class Application(QMainWindow, Ui_MainWindow):
         # print("参数更新完毕")
         # print("self.GreenRoof.xitaFC:,%.4f" % (self.GreenRoof.xitaFC))
         
+        
     def green_roof_sim(self):
         # 判断是否选择了路径，若无，则要弹窗
         if not hasattr(self, 'weather_file_path'):
@@ -234,9 +236,110 @@ class Application(QMainWindow, Ui_MainWindow):
         
         """结果可视化"""
         self.show_curve(q3,None,None)
-            
-        QMessageBox.information(self,'运行完毕','仿真已完成！')
         
+        """结果自动保存"""
+        sim_results_save_dir,timestamp = self.save_single_sponge_sim_results(model_name="greenroof", 
+                                            data=q3, 
+                                            start_date=self.GreenRoof.start_dt_str,
+                                            end_date=self.GreenRoof.end_dt_str,
+                                            freq='1min')
+        
+        self.save_single_sponge_sim_params(model_name="greenroof", 
+                                           params_dict=self.GreenRoof.pack_params,
+                                           start_date=self.GreenRoof.start_dt_str,
+                                            end_date=self.GreenRoof.end_dt_str,
+                                            timestamp=timestamp,
+                                            freq='1min')
+        
+        QMessageBox.information(self,'运行完毕','完成！实验参数和结果保存在：\n%s' %(sim_results_save_dir))
+        
+    def save_single_sponge_sim_results(self, model_name, data, start_date,end_date, freq='1min'):
+            # 路径设置
+            cur_path = os.path.split(os.path.realpath(__file__))[0]
+            timestamp = str(datetime.datetime.now()).split(".")[0].replace(" ", "T").replace("-","").replace(":","")
+            # save_dir = os.path.join(cur_path,"results", "single_sponge",timestamp)
+            save_dir = os.path.join("results", "single_sponge",timestamp)
+            if not os.path.exists(save_dir):
+                os.makedirs(save_dir,exist_ok=True)
+            
+            # 仿真结果数据整合成df
+            dates = pd.date_range(start=start_date,end=end_date,freq=freq)
+            date_list = [x.strftime("%Y-%m-%d %H:%M") for x in dates]
+            sim_results = pd.DataFrame(data={"仿真时间(min)":date_list,
+                               "出流量 (mm/hr)":data})
+            # 执行保存
+            
+            save_path = os.path.join(save_dir, "result_%s_sim.xlsx" % (model_name))
+            sim_results.to_excel(save_path,index=False)
+            
+            return save_dir,timestamp
+        
+    def save_single_sponge_sim_params(self, model_name, params_dict,start_date,end_date, timestamp,freq='1min'):
+        # 路径设置
+        save_dir = os.path.join("results", "single_sponge",timestamp)
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir,exist_ok=True)
+        
+        def merge_two_dicts(x, y):
+            """Given two dicts, merge them into a new dict as a shallow copy."""
+            x.update(y)
+            return x
+        
+        other_cfg = {
+            "基本信息":
+                {
+                "本次实验的时间戳":timestamp,
+                "仿真海绵单体模型":model_name,
+                "仿真起始日期+时间":start_date,
+                "仿真结束日期+时间":end_date,
+                "时间步长":freq,
+                }
+        }
+        params_dict = merge_two_dicts(other_cfg, {"用户输入参数":params_dict})        
+        
+        save_path = os.path.join(save_dir, "result_%s_params.yaml" % (model_name))
+        save_dict_to_yaml(params_dict,save_path)
+        
+        
+        # params_json = json.dumps(params_dict)
+        # with open('config.yaml','w',encoding='utf-8') as f:
+        #     yaml.dump(params_dict,default_flow_style=True)
+        #     yaml.safe_dump(yaml.load(params_dict,Loader=yaml.FullLoader),f,
+        #                    allow_unicode=True,default_flow_style=False)
+            # yaml.safe_dump(yaml.load(params_json,Loader=yaml.FullLoader),f,
+            #                allow_unicode=True,default_flow_style=False)
+            #allow_unicode=True在数据中存在中文时，解决编码问题
+            
+        # ***************** initialization ******************
+        # self.GreenRoof.d1_0 = self.d1_0.value()                # initial depth of water stored on the surface (mm)
+        # self.GreenRoof.F_0 = self.F_0.value()   # initial accumulative infiltraion of surface water into the soil layer (mm),500(20200521)0500
+
+        # =========== the Design parameters ============
+        # self.GreenRoof.chang = self.chang.value()                 # 绿色屋顶长度, mm
+        # self.GreenRoof.kuan = self.kuan.value()                   # 绿色屋顶宽度, mm
+
+        #soilDensity = 1.4          # soil dry bulk density (g/cm**3)
+        #storageDensity = 1.8       # stone dry bulk density (g/cm**3)
+        
+        # ================ system setting ====================
+        # self.Tstep = 1/60               # time step (hr),min
+
+        #设置的常数
+        # self.GreenRoof.albedo = self.albedo.value()  #表面反射率
+        # self.GreenRoof.e0 = self.e0.value()     #0℃水的饱和蒸气压，kpa
+        #z00 = 0.01   #地表有效粗糙长度，m
+        #z = 2  #参考高度
+
+        #已率定的水文参数,20220710
+        
+        # self.GreenRoof.C1 = self.C1.value() * 1e-8        #砾石层水分蒸发的空气动力学导率
+
+        # print("参数更新完毕")
+        # print("self.GreenRoof.xitaFC:,%.4f" % (self.GreenRoof.xitaFC))
+        # 输入参数整合成yaml格式
+        # 执行保存
+        return 
+         
     def green_roof_sim_and_val(self):
         # 判断是否选择了路径，若无，则要弹窗
         if (not hasattr(self, 'weather_file_path')) or (not hasattr(self, 'observed_file_path')):
@@ -292,13 +395,12 @@ class Application(QMainWindow, Ui_MainWindow):
         
         def get_xticklabels(start,end,num=6,freq='min'):
             dates = pd.date_range(start=start,end=end,freq=freq)
-            show_dates = dates[::len(dates)//num]
+            date_list = [x.strftime("%Y-%m-%d %H:%M") for x in dates]
+            show_dates = date_list[::len(dates)//num] + [date_list[-1]]
             
             xticks = list(range(0,len(dates),len(dates)//num)) + [len(dates)-1]
+            xlabels = [show_dates[i] for i in range(len(show_dates))]
             
-            end_date = str(dates[-1])[:-3]
-            xlabels = [str(show_dates[i])[:-3] for i in range(num)]
-            xlabels += [end_date]
             return xticks, xlabels
         
         if obs is not None:
@@ -307,7 +409,7 @@ class Application(QMainWindow, Ui_MainWindow):
             xticks, xlabels = get_xticklabels(self.GreenRoof.start_dt_str,self.GreenRoof.end_dt_str, freq='min')
         
         F1.axes1.legend(fontsize=fs-2)
-        F1.axes1.set_xlabel(u"时间 (min)", fontsize=fs-2)
+        F1.axes1.set_xlabel(u"时间", fontsize=fs-2)
         F1.axes1.set_ylabel(u"出流量 (mm/hr)", fontsize=fs-5)
         F1.axes1.set_xticks(xticks)
         F1.axes1.set_xticklabels(labels=xlabels,rotation=90)
@@ -342,35 +444,15 @@ class SimdateOptions(QDialog, Ui_SimDates):
     def __init__(self, parent=None):
         super(SimdateOptions, self).__init__(parent)
         self.setupUi(self)             # 创建界面
+
 class GreenroofInput(QDialog, Ui_Greenroof):
     def __init__(self, parent=None):
         super(GreenroofInput, self).__init__(parent)
         self.setupUi(self)             # 创建界面
-        
-        # TODO：通过“取消”关闭子窗口
-        # buttonBox.accepted.connect(self.accept) # 确定
-        # self.pushButton_greenroof_cancal.rejected.connect(self.reject) # 取消
-        # self.pushButton_greenroof_ok.clicked.connect(self.upate_params) # 确认 TODO：这边如何确认
-        # self.pushButton_greenroof_cancal.clicked.connect(self.closeEvent) # 取消
-        # self.pushButton_greenroof_help.clicked.connect(self.upate_params) # 帮助
-    
-    def closeEvent(self, event) -> None:
-        event.accept()
-    
-    def close_dialog(self,event):
-        # self.close()
-        self.getWin.close()
-        event.accept()
 
-# # 设计不同页面之间的逻辑关系
-# def Interaction_Logic(main_window, greenroof_dialog):
-#     main_window.test_button.clicked.connect(greenroof_dialog.show) # 点击按钮时，弹窗显示
     
 if __name__ == '__main__':
     app = QApplication(sys.argv)                    # 创建应用程序对象
-    mainWindow = Application()                      # 实例化界面
-    # GreenRoofDialog = GreenroofInput()  # 实例化输入界面
-    # Interaction_Logic(mainWindow, GreenRoofDialog)      # 页面之间的逻辑设计
-    
+    mainWindow = Application()                      # 实例化界面    
     mainWindow.show()                               # 窗口显示
     sys.exit(app.exec_())                           # 主循环结束

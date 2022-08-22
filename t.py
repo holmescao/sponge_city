@@ -1,3 +1,4 @@
+import pandas as pd
 import datetime
 
 time_step = 1/60
@@ -9,10 +10,19 @@ step_per_min = 1/time_step/60
 time_num = total_min *step_per_min
 print(total_min)
 
-import pandas as pd
 
 dates = pd.date_range(start=start_dt,end=end_dt,freq='min')
+date_list = [x.strftime("%H:%M") for x in dates]
 indice_num = len(dates)//4
-show_dates = dates[::indice_num]
-show_dates = [str(show_dates[i])[:-3] for i in range(4)]
+show_dates = date_list[::indice_num] + [date_list[-1]]
+
+
+show_dates = [show_dates[i].split(" ")[-1] for i in range(4)]
 print(show_dates)
+
+timestamp = str(datetime.datetime.now()).split(".")[0].replace(" ", "T").replace("-","").replace(":","")
+print(timestamp)
+
+import os
+p = os.path.split(os.path.realpath(__file__))[0]
+print(p)

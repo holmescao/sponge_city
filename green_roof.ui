@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>绿色屋顶</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
@@ -639,16 +639,9 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QDialogButtonBox" name="pushButton_greenroof_ok">
+        <widget class="QDialogButtonBox" name="buttonBox_greenroof_ok_cancel">
          <property name="standardButtons">
-          <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_greenroof_help">
-         <property name="text">
-          <string>帮助</string>
+          <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
          </property>
         </widget>
        </item>

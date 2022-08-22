@@ -46,8 +46,8 @@ class GreenRoof:
         self.psi2 = 320.2869   #土壤层表面水分入渗公式中的土壤层吸力水头44.1493
         
         # 仿真起止时间，及时间步长
-        self.start_dt_str = "2022-08-21 00:00:00"
-        self.end_dt_str = "2022-08-21 06:00:00"
+        self.start_dt_str = "2022-08-21 00:00"
+        self.end_dt_str = "2022-08-21 06:00"
         self.Tstep = 1/60               # time step (hr),min
         
         
@@ -55,6 +55,61 @@ class GreenRoof:
         self.observed_file_path = observed_file_path
         self.weather_file_path = weather_file_path
     
+    @property
+    def pack_params(self):
+         green_roof_params_dict = {
+            "蓄水层":{
+                "蓄水层水深":self.d3_0,
+                "蓄水层深度":self.D3,
+                "蓄水层最小可出流深度":self.D3D,
+                "砾石层孔隙率":self.phi3,
+                "孔流系数":self.C3D,
+                "孔流指数":self.eta3D,
+            },
+            "土壤层":{
+                "土层含水量":self.xita2_0,
+                "基质层深度":self.D2,
+                "田间持水量":self.xitaFC,
+                "凋萎点":self.xitaWP,
+                "土壤层孔隙率":self.phi2,
+                "临界含水量":self.xitacb,
+                "饱和导水率":self.Ksat,
+                "衰减常数":self.HCO,
+                "吸力水头":self.psi2,
+            },
+            "表层":{
+                "溢流层深度":self.D1,
+                "空隙率":self.phi1,
+            }
+        }
+         
+        #  green_roof_params_dict = {
+        #     "蓄水层":{
+        #         "蓄水层水深":self.GreenRoof.d3_0,
+        #         "蓄水层深度":self.GreenRoof.D3,
+        #         "蓄水层最小可出流深度":self.GreenRoof.D3D,
+        #         "砾石层孔隙率":self.GreenRoof.phi3,
+        #         "孔流系数":self.GreenRoof.C3D,
+        #         "孔流指数":self.GreenRoof.eta3D,
+        #     },
+        #     "土壤层":{
+        #         "土层含水量":self.GreenRoof.xita2_0,
+        #         "基质层深度":self.GreenRoof.D2,
+        #         "田间持水量":self.GreenRoof.xitaFC,
+        #         "凋萎点":self.GreenRoof.xitaWP,
+        #         "土壤层孔隙率":self.GreenRoof.phi2,
+        #         "临界含水量":self.GreenRoof.xitacb,
+        #         "饱和导水率":self.GreenRoof.Ksat,
+        #         "衰减常数":self.GreenRoof.HCO,
+        #         "吸力水头":self.GreenRoof.psi2,
+        #     },
+        #     "表层":{
+        #         "溢流层深度":self.GreenRoof.D1,
+        #         "空隙率":self.GreenRoof.phi1,
+        #     }
+        # }
+         
+         return green_roof_params_dict
     @property
     def get_observed_data(self):
         #输入实测出流数据,仅包括出流量不为0的数据

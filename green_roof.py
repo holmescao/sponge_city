@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Greenroof(object):
     def setupUi(self, Greenroof):
         Greenroof.setObjectName("Greenroof")
-        Greenroof.resize(400, 334)
+        Greenroof.resize(402, 341)
         self.horizontalLayout = QtWidgets.QHBoxLayout(Greenroof)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -412,25 +412,22 @@ class Ui_Greenroof(object):
         self.verticalLayout.addWidget(self.tabWidget)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.pushButton_greenroof_ok = QtWidgets.QPushButton(Greenroof)
-        self.pushButton_greenroof_ok.setObjectName("pushButton_greenroof_ok")
-        self.horizontalLayout_4.addWidget(self.pushButton_greenroof_ok)
-        self.pushButton_greenroof_cancal = QtWidgets.QPushButton(Greenroof)
-        self.pushButton_greenroof_cancal.setObjectName("pushButton_greenroof_cancal")
-        self.horizontalLayout_4.addWidget(self.pushButton_greenroof_cancal)
-        self.pushButton_greenroof_help = QtWidgets.QPushButton(Greenroof)
-        self.pushButton_greenroof_help.setObjectName("pushButton_greenroof_help")
-        self.horizontalLayout_4.addWidget(self.pushButton_greenroof_help)
+        self.buttonBox_greenroof_ok_cancel = QtWidgets.QDialogButtonBox(Greenroof)
+        self.buttonBox_greenroof_ok_cancel.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Help|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox_greenroof_ok_cancel.setObjectName("buttonBox_greenroof_ok_cancel")
+        self.horizontalLayout_4.addWidget(self.buttonBox_greenroof_ok_cancel)
         self.verticalLayout.addLayout(self.horizontalLayout_4)
         self.horizontalLayout.addLayout(self.verticalLayout)
 
         self.retranslateUi(Greenroof)
+        self.buttonBox_greenroof_ok_cancel.accepted.connect(Greenroof.accept) # type: ignore
+        self.buttonBox_greenroof_ok_cancel.rejected.connect(Greenroof.reject) # type: ignore
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Greenroof)
 
     def retranslateUi(self, Greenroof):
         _translate = QtCore.QCoreApplication.translate
-        Greenroof.setWindowTitle(_translate("Greenroof", "Dialog"))
+        Greenroof.setWindowTitle(_translate("Greenroof", "绿色屋顶"))
         self.label_5.setText(_translate("Greenroof", "蓄水层水深"))
         self.label_14.setText(_translate("Greenroof", "蓄水层深度"))
         self.label_15.setText(_translate("Greenroof", "<html><head/><body><p>蓄水层最小<br/>可出流深度</p></body></html>"))
@@ -451,6 +448,3 @@ class Ui_Greenroof(object):
         self.label_37.setText(_translate("Greenroof", "溢流层深度"))
         self.label_38.setText(_translate("Greenroof", "空隙率"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_6), _translate("Greenroof", "表层"))
-        self.pushButton_greenroof_ok.setText(_translate("Greenroof", "确认"))
-        self.pushButton_greenroof_cancal.setText(_translate("Greenroof", "取消"))
-        self.pushButton_greenroof_help.setText(_translate("Greenroof", "帮助"))
