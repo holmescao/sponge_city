@@ -1,4 +1,7 @@
 # TODO: 有些无法在qt designer完成的事情，需要写代码完成，所以最终还是全靠写代码来设计吧！
+import numpy as np
+import pandas as pd
+import datetime
 import os 
 import matplotlib.pyplot as plt
 import sys
@@ -10,8 +13,9 @@ from PyQt5.QtWidgets import QApplication, QMainWindow,QFileDialog,QMessageBox,QG
 # from PyQt6.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 """================= 导入窗口================="""
-from sponge_city_latest import Ui_MainWindow # 导入主窗口
+from sponge_city import Ui_MainWindow # 导入主窗口
 from green_roof import Ui_Greenroof # 导入绿色屋顶输入界面
+from sim_dates import Ui_SimDates # 导入时间选择界面
 """================= 导入窗口================="""
 from utils.green_roof import GreenRoof                   # 导入要执行的算法
 
@@ -49,13 +53,70 @@ class Application(QMainWindow, Ui_MainWindow):
         self.action_open_observed_file.triggered.connect(self.open_observed_file)
         self.action_open_weather_file.triggered.connect(self.open_weather_file)
         
-        # list点击进行弹窗
-        self.listView.clicked.connect(self.select_haimian)
         
+        self.listView.clicked.connect(self.select_haimian) # 点击选择海绵体，弹窗选择参数
+        
+        self.actionDates.triggered.connect(self.open_sim_datetime_dialog) # 选择仿真起止日期和步长
         self.action_sim_green_roof.triggered.connect(self.green_roof_sim) # 仿真
         self.action_sim_and_val_green_roof.triggered.connect(self.green_roof_sim_and_val) # 仿真&验证
         # self.action_sim_green_roof.clicked.connect(
         #     lambda: self.test(self.test_button,))
+        
+        
+    def open_sim_datetime_dialog(self):
+        # 实例化输入界面
+        sim_datetime_Dialog = SimdateOptions(self) # !得把self传进去，否则不会保持窗口
+        # 收到确认信号后，更新参数
+        self.dateTime_start_edit = sim_datetime_Dialog.dateTime_start_edit
+        self.dateTime_end_edit = sim_datetime_Dialog.dateTime_end_edit
+        self.time_step = sim_datetime_Dialog.spinBox_timestep
+        sim_datetime_Dialog.accepted.connect(self.update_sim_datetime)
+        # sim_datetime_Dialog.dateTime_start_edit.dateTimeChanged.connect(self.update_sim_datetime)
+        # green_roof_Dialog.pushButton_greenroof_ok.clicked.connect(self.upate_params)
+        # sim_datetime_Dialog.pushButton_greenroof_ok.clicked.connect(lambda: self.upate_params(green_roof_Dialog,))
+        # green_roof_Dialog.Signal_updateparams.connect(self.upate_params)
+        sim_datetime_Dialog.show() # 打开窗口
+    
+    def update_sim_datetime(self):
+        # 获取更新后的时间
+        # 起始时间
+        self.dateTime_start_edit.setDisplayFormat("yyyy-MM-dd hh:mm")
+        start_dt = self.dateTime_start_edit.dateTime()
+        start_dt_str = start_dt.toString(self.dateTime_start_edit.displayFormat())
+        # 结束时间
+        self.dateTime_end_edit.setDisplayFormat("yyyy-MM-dd hh:mm")
+        end_dt = self.dateTime_end_edit.dateTime()
+        end_dt_str = end_dt.toString(self.dateTime_end_edit.displayFormat())
+        # 时间步长hour
+        time_step = self.time_step.value() / 60
+        
+        # 赋值
+        self.assign_sim_datetime(start_dt_str,end_dt_str,time_step)
+        
+    
+    def assign_sim_datetime(self,start_dt_str,end_dt_str,time_step):
+        # 给绿色屋顶赋值
+        self.GreenRoof.start_dt_str = start_dt_str
+        self.GreenRoof.end_dt_str = end_dt_str
+        self.GreenRoof.Tstep = time_step
+        
+        # TODO：其他的也一样赋值吧；
+        # 或者放到具体海绵单体的仿真函数里面
+        
+    def check_datetime(self,data_num, start_dt_str,end_dt_str,time_step):
+        start_dt = datetime.datetime.strptime(start_dt_str,"%Y-%m-%d %H:%M")
+        end_dt = datetime.datetime.strptime(end_dt_str,"%Y-%m-%d %H:%M")
+        
+        # 计算日期之间的点数
+        time_delta = end_dt - start_dt
+        total_min = time_delta.days *24 *60 + time_delta.seconds // 60 + 1
+        step_per_min = 1/time_step/60
+        time_num = total_min *step_per_min
+
+        return True if data_num == time_num else False
+            
+            
+        
     
     def select_haimian(self, item):
         # ["绿色屋顶","渗透铺装", "下凹式绿地", "生物滞留池"]
@@ -73,7 +134,7 @@ class Application(QMainWindow, Ui_MainWindow):
         green_roof_Dialog.pushButton_greenroof_ok.clicked.connect(lambda: self.upate_params(green_roof_Dialog,))
         # green_roof_Dialog.Signal_updateparams.connect(self.upate_params)
         green_roof_Dialog.show() # 打开窗口
-        
+    
         
     def open_observed_file(self):
         self.observed_file_path, filetype = QFileDialog.getOpenFileName(self,
@@ -137,7 +198,7 @@ class Application(QMainWindow, Ui_MainWindow):
         self.GreenRoof.phi3 = params.phi3.value()    #砾石层孔隙率
         self.GreenRoof.C3D = params.C3D.value()     #孔流系数0.105,0.148,5.65
         self.GreenRoof.eta3D = params.eta3D.value()  #孔流指数，原1.865,1.93,0.9
-        # self.GreenRoof.C1 = self.C1.value() * 1e-8        #砾石层水分蒸发的空气动力学导率 # TODO:注意要x 1e-8
+        # self.GreenRoof.C1 = self.C1.value() * 1e-8        #砾石层水分蒸发的空气动力学导率
         self.GreenRoof.xitacb = params.xitacb.value()    #土壤含水量大于xitacb时，植物蒸腾不受水分限制,0.28#20211223
         self.GreenRoof.Ksat = params.Ksat.value()     #土壤层基质流饱和导水率，mm/hr312.6044，231.72
         self.GreenRoof.HCO = params.HCO.value()   #土壤层下部水分渗出公式中的导水衰减常数34.5439
@@ -156,6 +217,17 @@ class Application(QMainWindow, Ui_MainWindow):
         
         # 天气文件赋值
         self.GreenRoof.weather_file_path = self.weather_file_path
+        self.GreenRoof.get_weather_data
+        # 检查仿真时间是否正确
+        if not self.check_datetime(self.GreenRoof.LoopCount,
+                            start_dt_str=self.GreenRoof.start_dt_str,
+                            end_dt_str=self.GreenRoof.end_dt_str,
+                            time_step=self.GreenRoof.Tstep):
+            QMessageBox.critical(
+            self,
+            '错误',
+            '仿真日期长度与真实数据长度不匹配！请仿真日期参数或真实数据文件')
+            return 
         
         """仿真，并返回结果"""
         q3 = self.GreenRoof.sim
@@ -177,6 +249,18 @@ class Application(QMainWindow, Ui_MainWindow):
         # 天气和观测文件赋值
         self.GreenRoof.observed_file_path = self.observed_file_path
         self.GreenRoof.weather_file_path = self.weather_file_path
+        
+        self.GreenRoof.get_weather_data
+        # 检查仿真时间是否正确
+        if not self.check_datetime(self.GreenRoof.LoopCount,
+                            start_dt_str=self.GreenRoof.start_dt_str,
+                            end_dt_str=self.GreenRoof.end_dt_str,
+                            time_step=self.GreenRoof.Tstep):
+            QMessageBox.critical(
+            self,
+            '错误',
+            '仿真日期长度与真实数据长度不匹配！请仿真日期参数或真实数据文件')
+            return 
         
         """仿真，并返回结果"""
         q3 = self.GreenRoof.sim
@@ -205,11 +289,28 @@ class Application(QMainWindow, Ui_MainWindow):
         if obs is not None:
             # F1.axes1.plot(xx_obs,pred,color='g',lw=2,linestyle=".",label="观测值")
             F1.axes1.plot(xx_obs,pred,"o",color='g',lw=1,label="观测值")
+        
+        def get_xticklabels(start,end,num=6,freq='min'):
+            dates = pd.date_range(start=start,end=end,freq=freq)
+            show_dates = dates[::len(dates)//num]
             
+            xticks = list(range(0,len(dates),len(dates)//num)) + [len(dates)-1]
+            
+            end_date = str(dates[-1])[:-3]
+            xlabels = [str(show_dates[i])[:-3] for i in range(num)]
+            xlabels += [end_date]
+            return xticks, xlabels
+        
+        if obs is not None:
+            xticks, xlabels = get_xticklabels(self.GreenRoof.start_dt_str,self.GreenRoof.end_dt_str,freq='1H')
+        else:
+            xticks, xlabels = get_xticklabels(self.GreenRoof.start_dt_str,self.GreenRoof.end_dt_str, freq='min')
+        
         F1.axes1.legend(fontsize=fs-2)
         F1.axes1.set_xlabel(u"时间 (min)", fontsize=fs-2)
         F1.axes1.set_ylabel(u"出流量 (mm/hr)", fontsize=fs-5)
-        # F1.axes1.set_xticklabels(fontsize=fs-2)
+        F1.axes1.set_xticks(xticks)
+        F1.axes1.set_xticklabels(labels=xlabels,rotation=90)
         # F1.axes1.set_yticklabels(fontsize=fs-2)
         F1.axes1.tick_params(axis='x',labelsize=fs-2)
         F1.axes1.tick_params(axis='y',labelsize=fs)
@@ -237,7 +338,10 @@ class Application(QMainWindow, Ui_MainWindow):
         
         plt.close()
 
-
+class SimdateOptions(QDialog, Ui_SimDates):
+    def __init__(self, parent=None):
+        super(SimdateOptions, self).__init__(parent)
+        self.setupUi(self)             # 创建界面
 class GreenroofInput(QDialog, Ui_Greenroof):
     def __init__(self, parent=None):
         super(GreenroofInput, self).__init__(parent)

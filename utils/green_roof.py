@@ -26,9 +26,6 @@ class GreenRoof:
         self.phi1 = 0.95 # void fraction of any surface volume (i.e., the fraction of freeboard above the surface not filled with vegetation)
 
         # ================ system setting ====================
-        self.Tstep = 1/60               # time step (hr),min
-
-        
         #设置的常数
         self.albedo = 0.23  #表面反射率
         self.e0 = 0.6113     #0℃水的饱和蒸气压，kpa
@@ -47,6 +44,12 @@ class GreenRoof:
         self.Ksat = 178.57     #土壤层基质流饱和导水率，mm/hr312.6044，231.72
         self.HCO = 4.8065   #土壤层下部水分渗出公式中的导水衰减常数34.5439
         self.psi2 = 320.2869   #土壤层表面水分入渗公式中的土壤层吸力水头44.1493
+        
+        # 仿真起止时间，及时间步长
+        self.start_dt_str = "2022-08-21 00:00:00"
+        self.end_dt_str = "2022-08-21 06:00:00"
+        self.Tstep = 1/60               # time step (hr),min
+        
         
         # 文件路径
         self.observed_file_path = observed_file_path
