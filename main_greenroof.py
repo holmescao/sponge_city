@@ -228,7 +228,7 @@ class Application(QMainWindow, Ui_MainWindow):
             QMessageBox.critical(
             self,
             '错误',
-            '仿真日期长度与真实数据长度不匹配！请仿真日期参数或真实数据文件')
+            '仿真日期长度与真实数据长度不匹配！请检查仿真日期参数或真实数据文件')
             return 
         
         """仿真，并返回结果"""

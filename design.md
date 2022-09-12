@@ -140,10 +140,10 @@
 ### 1. 添加时间逻辑 [done]
 在算法逻辑里增加对日期参数的接收，然后判断是否日期选择是匹配的
 若匹配，则在画图时横坐标按其显示
-
+![20220823145431](https://raw.githubusercontent.com/holmescao/figure-bed/main/img/20220823145431.png)
 ### 2. 修改显示图的时间显示 [done]
 把date去掉，只保留time
-
+![9346b1bc727d06f0d4cd4925c25c95c](https://raw.githubusercontent.com/holmescao/figure-bed/main/img/9346b1bc727d06f0d4cd4925c25c95c.jpg)
 ### 3. 仿真结果自动保存 [done]
 - 仿真数据：
   每次仿真完，就把结果自动输出到项目下的文件夹`results\single_sponge\时间戳`，
@@ -152,4 +152,19 @@
   每次仿真完，就把相关参数自动输出到项目下的文件夹，
   命名方式为：`params_modelname_sim.yaml`
 
-注意：仿真结果和参数文件的`时间戳`要一样
+注意：仿真结果和参数文件的`时间戳`要一样 
+
+
+## 2022年09月12日
+### 1. 将面源污染模型由matlab转python并调试 [done]
+见`non_point_pollution.py`脚本
+
+
+
+
+
+
+
+
+
+
