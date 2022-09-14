@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'sponge_city_2022年08月21日.ui'
+# Form implementation generated from reading ui file 'sponge_city.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -11,10 +11,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QStringListModel
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(994, 400)
+        MainWindow.resize(1920, 1080)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -33,7 +34,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         
-    
         # self.listView = QtWidgets.QListView(self.centralwidget)
         # self.listView.setObjectName("listView")
         # self.horizontalLayout.addWidget(self.listView)
@@ -45,7 +45,6 @@ class Ui_MainWindow(object):
         self.haimain_list = ["绿色屋顶","渗透铺装", "下凹式绿地", "生物滞留池"]
         haimian_listModel.setStringList(self.haimain_list)
         self.listView.setModel(haimian_listModel)
-        
         
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
@@ -138,11 +137,14 @@ class Ui_MainWindow(object):
         self.action_sim_and_val_green_roof.setObjectName("action_sim_and_val_green_roof")
         self.actionDates = QtWidgets.QAction(MainWindow)
         self.actionDates.setObjectName("actionDates")
+        self.action_Block = QtWidgets.QAction(MainWindow)
+        self.action_Block.setObjectName("action_Block")
         self.menu_5.addAction(self.action_open_observed_file)
         self.menu_5.addAction(self.action_open_weather_file)
         self.menu.addSeparator()
         self.menu.addAction(self.menu_5.menuAction())
         self.menu_2.addAction(self.actionDates)
+        self.menu_2.addAction(self.action_Block)
         self.menusimulate.addAction(self.action_sim_green_roof)
         self.menusimulate_validate.addAction(self.action_sim_and_val_green_roof)
         self.menu_3.addAction(self.menusimulate.menuAction())
@@ -152,7 +154,8 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_3.menuAction())
         self.menubar.addAction(self.menu_4.menuAction())
         self.toolBar.addSeparator()
-
+        
+        
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -174,3 +177,4 @@ class Ui_MainWindow(object):
         self.action_open_weather_file.setText(_translate("MainWindow", "气象文件"))
         self.action_sim_and_val_green_roof.setText(_translate("MainWindow", "绿色屋顶"))
         self.actionDates.setText(_translate("MainWindow", "仿真日期"))
+        self.action_Block.setText(_translate("MainWindow", "面源斑块"))

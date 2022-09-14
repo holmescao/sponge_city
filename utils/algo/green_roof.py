@@ -129,7 +129,7 @@ class GreenRoof:
         self.Uwind = data[:, 4]  # 风速，m/s
             # P = InputData8(:,6)  #大气压，kPa
         self.y = 0.665*(10** (-3))*data[:, 5]  # 将大气压kpa转换为Psychrometric constant，kPa/℃
-        # Ra_solar = data(:,8) #地外太阳辐射，W/m2 #20211106
+        # Ra_solar = data(:,8) #地外太阳辐射，W/m2 # 20211106
 
         #设置循环长度 
         self.LoopCount = len(data)

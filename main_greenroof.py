@@ -1,4 +1,5 @@
 # TODO: 有些无法在qt designer完成的事情，需要写代码完成，所以最终还是全靠写代码来设计吧！
+import copy
 import json
 import yaml
 import numpy as np
@@ -15,12 +16,15 @@ from PyQt5.QtWidgets import QApplication, QMainWindow,QFileDialog,QMessageBox,QG
 # from PyQt6.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 """================= 导入窗口================="""
-from sponge_city import Ui_MainWindow # 导入主窗口
-from green_roof import Ui_Greenroof # 导入绿色屋顶输入界面
-from sim_dates import Ui_SimDates # 导入时间选择界面
-"""================= 导入窗口================="""
-from utils.green_roof import GreenRoof                   # 导入要执行的算法
-from utils.general_functions import save_dict_to_yaml
+from utils.ui.sponge_city import Ui_MainWindow # 导入主窗口
+from utils.ui_class.SimdateOptions import SimdateOptions
+from utils.ui_class.GreenroofInput import GreenroofInput
+from utils.ui_class.Block import Block
+
+"""================= 导入函数================="""
+from utils.algo.green_roof import GreenRoof                   # 导入要执行的算法
+from utils.algo.non_point_pollution import NonPointPollution
+from utils.algo.general_functions import save_dict_to_yaml
 
 # matplotlib.use("Qt5Agg")
 plt.rcParams['font.family'] = 'sans-serif'
@@ -48,24 +52,61 @@ class Application(QMainWindow, Ui_MainWindow):
         self.setupUi(self)             # 创建界面
         
         """实例化"""
-        # 实例化绿色屋顶模型
+        # 绿色屋顶模型
         self.GreenRoof = GreenRoof("","")
-        
+        # 面源污染模型
+        self.NonPointPollution = NonPointPollution()
+        # 实例化输入界面
+        self.block_Dialog = Block(self) # !得把self传进去，否则不会保持窗口
         """信号和槽函数部分"""
         # 选择观测数据文件        
         self.action_open_observed_file.triggered.connect(self.open_observed_file)
         self.action_open_weather_file.triggered.connect(self.open_weather_file)
         
-        
+        """海绵单体选择"""
         self.listView.clicked.connect(self.select_haimian) # 点击选择海绵体，弹窗选择参数
         
-        self.actionDates.triggered.connect(self.open_sim_datetime_dialog) # 选择仿真起止日期和步长
+        """工具栏-选择"""
+        # 仿真起止日期和步长
+        self.actionDates.triggered.connect(self.open_sim_datetime_dialog) 
+        # 面源斑块
+        self.action_Block.triggered.connect(self.open_block_dialog) 
+        
+        """工具栏-运行"""
         self.action_sim_green_roof.triggered.connect(self.green_roof_sim) # 仿真
         self.action_sim_and_val_green_roof.triggered.connect(self.green_roof_sim_and_val) # 仿真&验证
         # self.action_sim_green_roof.clicked.connect(
         #     lambda: self.test(self.test_button,))
         
+    
+    def open_block_dialog(self):
+        # 临时保存当前选项值
+        temp_block_params = self.NonPointPollution.Temp_assign_params(self.block_Dialog)
         
+        # 选择面源斑块类型
+        self.block_Dialog.comboBox_landuse.currentIndexChanged.connect(self.get_landuse_type)
+        self.block_Dialog.comboBox_underlyingsurface.currentIndexChanged.connect(self.get_underlyingsurface_type)
+        
+        # 更新：参数改变（真的）
+        self.block_Dialog.accepted.connect(lambda: self.NonPointPollution.update_params(self.block_Dialog))
+        
+        # 恢复到此次打开窗口时的初始值
+        self.block_Dialog.rejected.connect(lambda: self.reset_params(temp_block_params))
+        
+        # 打开、保持窗口
+        self.block_Dialog.show()
+    
+    def reset_params(self, temp_block_params):
+        self.block_Dialog = self.NonPointPollution.reset_params(self.block_Dialog, temp_block_params)
+        
+    def get_landuse_type(self):
+        # 只显示土地利用类型对应的参数值，但不更新模型的参数值
+        self.block_Dialog = self.NonPointPollution.change_landuse_params(self.block_Dialog)
+    
+    def get_underlyingsurface_type(self):
+        # 只显示下垫面类型对应的参数值，但不更新模型的参数值
+        self.block_Dialog = self.NonPointPollution.change_underlyingsurface_params(self.block_Dialog)
+    
     def open_sim_datetime_dialog(self):
         # 实例化输入界面
         sim_datetime_Dialog = SimdateOptions(self) # !得把self传进去，否则不会保持窗口
@@ -74,11 +115,8 @@ class Application(QMainWindow, Ui_MainWindow):
         self.dateTime_end_edit = sim_datetime_Dialog.dateTime_end_edit
         self.time_step = sim_datetime_Dialog.spinBox_timestep
         sim_datetime_Dialog.accepted.connect(self.update_sim_datetime)
-        # sim_datetime_Dialog.dateTime_start_edit.dateTimeChanged.connect(self.update_sim_datetime)
-        # green_roof_Dialog.pushButton_greenroof_ok.clicked.connect(self.upate_params)
-        # sim_datetime_Dialog.pushButton_greenroof_ok.clicked.connect(lambda: self.upate_params(green_roof_Dialog,))
-        # green_roof_Dialog.Signal_updateparams.connect(self.upate_params)
-        sim_datetime_Dialog.show() # 打开窗口
+        # 打开窗口
+        sim_datetime_Dialog.show() 
     
     def update_sim_datetime(self):
         # 获取更新后的时间
@@ -440,17 +478,8 @@ class Application(QMainWindow, Ui_MainWindow):
         
         plt.close()
 
-class SimdateOptions(QDialog, Ui_SimDates):
-    def __init__(self, parent=None):
-        super(SimdateOptions, self).__init__(parent)
-        self.setupUi(self)             # 创建界面
 
-class GreenroofInput(QDialog, Ui_Greenroof):
-    def __init__(self, parent=None):
-        super(GreenroofInput, self).__init__(parent)
-        self.setupUi(self)             # 创建界面
 
-    
 if __name__ == '__main__':
     app = QApplication(sys.argv)                    # 创建应用程序对象
     mainWindow = Application()                      # 实例化界面    
