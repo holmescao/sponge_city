@@ -8,9 +8,6 @@ import datetime
 import os 
 import matplotlib.pyplot as plt
 import sys
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
-from matplotlib.figure import Figure
-
 from PyQt5.QtWidgets import QApplication, QMainWindow,QFileDialog,QMessageBox,QGraphicsScene,QDialog
 # from PySide6.QtWidgets import QApplication,QMainWindow,QFileDialog,QMessageBox,QGraphicsScene
 # from PyQt6.QtGui import QPixmap
@@ -25,24 +22,8 @@ from utils.ui_class.Block import Block
 from utils.algo.green_roof import GreenRoof                   # 导入要执行的算法
 from utils.algo.non_point_pollution import NonPointPollution
 from utils.algo.general_functions import save_dict_to_yaml
+from utils.algo.figure_function import MyFigure, fig_rainfall,fig_runoff,fig_pollution
 
-# matplotlib.use("Qt5Agg")
-plt.rcParams['font.family'] = 'sans-serif'
-plt.rcParams['font.sans-serif']=['Microsoft Yahei'] # 设定字体为微软雅黑
-
-
-# 重写一个matplotlib图像绘制类
-class MyFigure(FigureCanvasQTAgg):
-   def __init__(self,width=5,height=4,dpi = 100):
-      # 1、创建一个绘制窗口Figure对象
-      self.fig = Figure(figsize=(width,height),dpi=dpi,tight_layout=True)
-      # 2、在父类中激活Figure窗口,同时继承父类属性
-      super(MyFigure, self).__init__(self.fig)
- 
-   # 这里就是绘制图像、示例
-   def plotSin(self,x,y):
-      self.axes0 = self.fig.add_subplot(111)
-      self.axes0.plot(x,y)
 
 
 # 新建类继承于UI类，方便进一步书写逻辑
@@ -55,13 +36,15 @@ class Application(QMainWindow, Ui_MainWindow):
         # 绿色屋顶模型
         self.GreenRoof = GreenRoof("","")
         # 面源污染模型
-        self.NonPointPollution = NonPointPollution()
+        self.NonPointPollution = NonPointPollution("")
         # 实例化输入界面
         self.block_Dialog = Block(self) # !得把self传进去，否则不会保持窗口
+        self.sim_datetime_Dialog = SimdateOptions(self) # !得把self传进去，否则不会保持窗口
         """信号和槽函数部分"""
-        # 选择观测数据文件        
+        # 选择观测数据文件
         self.action_open_observed_file.triggered.connect(self.open_observed_file)
         self.action_open_weather_file.triggered.connect(self.open_weather_file)
+        self.action_block_rainfall_file.triggered.connect(self.open_weather_file)
         
         """海绵单体选择"""
         self.listView.clicked.connect(self.select_haimian) # 点击选择海绵体，弹窗选择参数
@@ -73,8 +56,13 @@ class Application(QMainWindow, Ui_MainWindow):
         self.action_Block.triggered.connect(self.open_block_dialog) 
         
         """工具栏-运行"""
+        # 绿色屋顶
         self.action_sim_green_roof.triggered.connect(self.green_roof_sim) # 仿真
         self.action_sim_and_val_green_roof.triggered.connect(self.green_roof_sim_and_val) # 仿真&验证
+        # 面源斑块
+        self.action_sim_block.triggered.connect(self.block_sim) # 仿真
+        
+        
         # self.action_sim_green_roof.clicked.connect(
         #     lambda: self.test(self.test_button,))
         
@@ -82,6 +70,8 @@ class Application(QMainWindow, Ui_MainWindow):
     def open_block_dialog(self):
         # 临时保存当前选项值
         temp_block_params = self.NonPointPollution.Temp_assign_params(self.block_Dialog)
+        
+        self.reject = False
         
         # 选择面源斑块类型
         self.block_Dialog.comboBox_landuse.currentIndexChanged.connect(self.get_landuse_type)
@@ -97,26 +87,32 @@ class Application(QMainWindow, Ui_MainWindow):
         self.block_Dialog.show()
     
     def reset_params(self, temp_block_params):
+        self.reject = True
         self.block_Dialog = self.NonPointPollution.reset_params(self.block_Dialog, temp_block_params)
         
     def get_landuse_type(self):
+        # 如果是因为退出而引发的利用类型变化则跳过
+        if self.reject: return
+        
         # 只显示土地利用类型对应的参数值，但不更新模型的参数值
         self.block_Dialog = self.NonPointPollution.change_landuse_params(self.block_Dialog)
     
     def get_underlyingsurface_type(self):
+        # 如果是因为退出而引发的利用类型变化则跳过
+        if self.reject: return
+        
         # 只显示下垫面类型对应的参数值，但不更新模型的参数值
         self.block_Dialog = self.NonPointPollution.change_underlyingsurface_params(self.block_Dialog)
     
     def open_sim_datetime_dialog(self):
-        # 实例化输入界面
-        sim_datetime_Dialog = SimdateOptions(self) # !得把self传进去，否则不会保持窗口
+        
         # 收到确认信号后，更新参数
-        self.dateTime_start_edit = sim_datetime_Dialog.dateTime_start_edit
-        self.dateTime_end_edit = sim_datetime_Dialog.dateTime_end_edit
-        self.time_step = sim_datetime_Dialog.spinBox_timestep
-        sim_datetime_Dialog.accepted.connect(self.update_sim_datetime)
+        self.dateTime_start_edit = self.sim_datetime_Dialog.dateTime_start_edit
+        self.dateTime_end_edit = self.sim_datetime_Dialog.dateTime_end_edit
+        self.time_step = self.sim_datetime_Dialog.spinBox_timestep
+        self.sim_datetime_Dialog.accepted.connect(self.update_sim_datetime)
         # 打开窗口
-        sim_datetime_Dialog.show() 
+        self.sim_datetime_Dialog.show() 
     
     def update_sim_datetime(self):
         # 获取更新后的时间
@@ -141,6 +137,12 @@ class Application(QMainWindow, Ui_MainWindow):
         self.GreenRoof.end_dt_str = end_dt_str
         self.GreenRoof.Tstep = time_step
         
+        
+        # 面源斑块赋值
+        self.NonPointPollution.start_dt_str = start_dt_str
+        self.NonPointPollution.end_dt_str = end_dt_str
+        self.NonPointPollution.Tstep = time_step
+        
         # TODO：其他的也一样赋值吧；
         # 或者放到具体海绵单体的仿真函数里面
         
@@ -150,9 +152,9 @@ class Application(QMainWindow, Ui_MainWindow):
         
         # 计算日期之间的点数
         time_delta = end_dt - start_dt
-        total_min = time_delta.days *24 *60 + time_delta.seconds // 60 + 1
+        total_min = time_delta.days *24 *60 + time_delta.seconds // 60
         step_per_min = 1/time_step/60
-        time_num = total_min *step_per_min
+        time_num = int(total_min *step_per_min) + 1
 
         return True if data_num == time_num else False
             
@@ -246,6 +248,113 @@ class Application(QMainWindow, Ui_MainWindow):
         # print("self.GreenRoof.xitaFC:,%.4f" % (self.GreenRoof.xitaFC))
         
         
+    def block_sim(self):
+        # 判断是否选择了路径，若无，则要弹窗
+        if not hasattr(self, 'weather_file_path'):
+            QMessageBox.critical(
+            self,
+            '错误',
+            '执行 仿真 前，请先选择数据文件，气象是必选的）！')
+            return 
+        
+        # 天气文件赋值
+        self.NonPointPollution.weather_file_path = self.weather_file_path
+        self.NonPointPollution.get_weather_data
+        
+        # self.update_sim_datetime()
+        # 检查仿真时间是否正确
+        if not self.check_datetime(self.NonPointPollution.LoopCount,
+                            start_dt_str=self.NonPointPollution.start_dt_str,
+                            end_dt_str=self.NonPointPollution.end_dt_str,
+                            time_step=self.NonPointPollution.Tstep):
+            QMessageBox.critical(
+            self,
+            '错误',
+            '仿真日期长度与真实数据长度不匹配！请检查仿真日期参数或真实数据文件')
+            return 
+        
+        if self.block_Dialog.comboBox_landuse.currentText() == "请选择":
+            QMessageBox.critical(
+            self.block_Dialog,
+            '错误',
+            "请选择土地利用类型！")
+            return 
+        if self.block_Dialog.comboBox_underlyingsurface.currentText() == "请选择":
+            QMessageBox.critical(
+            self.block_Dialog,
+            '错误',
+            "请选择下垫面类型！")
+            return 
+        
+        """仿真，并返回结果"""
+        rain, runoff, pollution = self.NonPointPollution.sim
+        
+        """结果可视化"""
+        self.show_block(rain, runoff, pollution)
+        
+        # """结果自动保存"""
+        # sim_results_save_dir,timestamp = self.save_single_sponge_sim_results(model_name="greenroof", 
+        #                                     data=q3, 
+        #                                     start_date=self.GreenRoof.start_dt_str,
+        #                                     end_date=self.GreenRoof.end_dt_str,
+        #                                     freq='1min')
+        
+        # self.save_single_sponge_sim_params(model_name="greenroof", 
+        #                                    params_dict=self.GreenRoof.pack_params,
+        #                                    start_date=self.GreenRoof.start_dt_str,
+        #                                     end_date=self.GreenRoof.end_dt_str,
+        #                                     timestamp=timestamp,
+        #                                     freq='1min')
+        
+        # QMessageBox.information(self,'运行完毕','完成！实验参数和结果保存在：\n%s' %(sim_results_save_dir))
+
+    def show_block(self, rain,runoff, pollution):
+        # rainfall
+        F_rain = fig_rainfall(rain, 
+                              width=self.block_rainfall_sim_res_rainfall.width(),
+                              height=self.block_rainfall_sim_res_rainfall.height(), 
+            start_dt_str=self.NonPointPollution.start_dt_str,
+            end_dt_str=self.NonPointPollution.end_dt_str,
+            freq="1H")
+        
+        # runoff
+        F_runoff = fig_runoff(runoff, 
+                              width=self.block_rainfall_sim_res_runoff.width(),
+                              height=self.block_rainfall_sim_res_runoff.height(), 
+            start_dt_str=self.NonPointPollution.start_dt_str,
+            end_dt_str=self.NonPointPollution.end_dt_str,
+            freq="1H")
+        
+        # pollution
+        F_pollution = fig_pollution(pollution,
+                              width=self.block_rainfall_sim_res_pollution.width(),
+                              height=self.block_rainfall_sim_res_pollution.height(), 
+            start_dt_str=self.NonPointPollution.start_dt_str,
+            end_dt_str=self.NonPointPollution.end_dt_str,
+            freq="1H")
+        
+        # rain
+        self.scene_rain = QGraphicsScene()  
+        self.scene_rain.addWidget(F_rain)  # 将图形元素添加到场景中
+        self.block_rainfall_sim_res_rainfall.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.block_rainfall_sim_res_rainfall.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.block_rainfall_sim_res_rainfall.setScene(self.scene_rain)  # 将创建添加到图形视图显示窗口
+        
+        # runoff
+        self.scene_runoff = QGraphicsScene()  
+        self.scene_runoff.addWidget(F_runoff)  # 将图形元素添加到场景中
+        self.block_rainfall_sim_res_runoff.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.block_rainfall_sim_res_runoff.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.block_rainfall_sim_res_runoff.setScene(self.scene_runoff)  # 将创建添加到图形视图显示窗口
+        
+        # pollution
+        self.scene_pollution = QGraphicsScene()  
+        self.scene_pollution.addWidget(F_pollution)  # 将图形元素添加到场景中
+        self.block_rainfall_sim_res_pollution.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.block_rainfall_sim_res_pollution.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.block_rainfall_sim_res_pollution.setScene(self.scene_pollution)  # 将创建添加到图形视图显示窗口
+        
+
     def green_roof_sim(self):
         # 判断是否选择了路径，若无，则要弹窗
         if not hasattr(self, 'weather_file_path'):

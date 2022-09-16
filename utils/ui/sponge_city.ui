@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1080</width>
-    <height>720</height>
+    <width>1920</width>
+    <height>1080</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -32,14 +32,14 @@
      <height>0</height>
     </size>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,1,6,4">
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,1,8,1">
       <item>
        <widget class="QListView" name="listView"/>
       </item>
       <item>
-       <spacer name="horizontalSpacer_2">
+       <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -52,89 +52,177 @@
        </spacer>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,4,1">
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="6,2">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="1,1,1">
-          <item>
-           <spacer name="horizontalSpacer_7">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Minimum</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_13">
-            <property name="enabled">
-             <bool>true</bool>
+         <widget class="QTabWidget" name="tabWidget_single_sponge_res">
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <widget class="QWidget" name="tab_single_block">
+           <attribute name="title">
+            <string>海绵单体</string>
+           </attribute>
+           <widget class="QGraphicsView" name="green_roof_sim_curve">
+            <property name="geometry">
+             <rect>
+              <x>90</x>
+              <y>80</y>
+              <width>1021</width>
+              <height>581</height>
+             </rect>
             </property>
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;出流仿真结果&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
            </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_8">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Minimum</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QGraphicsView" name="green_roof_sim_curve">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
+          </widget>
+          <widget class="QWidget" name="tab_block">
+           <attribute name="title">
+            <string>面源斑块</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QTabWidget" name="tabWidget_block_res">
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <widget class="QWidget" name="tab_block_rainfall">
+               <attribute name="title">
+                <string>场次降雨</string>
+               </attribute>
+               <widget class="QWidget" name="">
+                <property name="geometry">
+                 <rect>
+                  <x>10</x>
+                  <y>60</y>
+                  <width>1211</width>
+                  <height>391</height>
+                 </rect>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1">
+                 <property name="spacing">
+                  <number>5</number>
+                 </property>
+                 <property name="sizeConstraint">
+                  <enum>QLayout::SetMinAndMaxSize</enum>
+                 </property>
+                 <item>
+                  <widget class="QGraphicsView" name="block_rainfall_sim_res_rainfall">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="backgroundBrush">
+                    <brush brushstyle="NoBrush">
+                     <color alpha="255">
+                      <red>255</red>
+                      <green>255</green>
+                      <blue>255</blue>
+                     </color>
+                    </brush>
+                   </property>
+                   <property name="foregroundBrush">
+                    <brush brushstyle="NoBrush">
+                     <color alpha="255">
+                      <red>255</red>
+                      <green>255</green>
+                      <blue>255</blue>
+                     </color>
+                    </brush>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QGraphicsView" name="block_rainfall_sim_res_pollution">
+                   <property name="backgroundBrush">
+                    <brush brushstyle="NoBrush">
+                     <color alpha="255">
+                      <red>255</red>
+                      <green>255</green>
+                      <blue>255</blue>
+                     </color>
+                    </brush>
+                   </property>
+                   <property name="foregroundBrush">
+                    <brush brushstyle="NoBrush">
+                     <color alpha="255">
+                      <red>255</red>
+                      <green>255</green>
+                      <blue>255</blue>
+                     </color>
+                    </brush>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QGraphicsView" name="block_rainfall_sim_res_runoff">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="backgroundBrush">
+                    <brush brushstyle="NoBrush">
+                     <color alpha="255">
+                      <red>255</red>
+                      <green>255</green>
+                      <blue>255</blue>
+                     </color>
+                    </brush>
+                   </property>
+                   <property name="foregroundBrush">
+                    <brush brushstyle="NoBrush">
+                     <color alpha="255">
+                      <red>255</red>
+                      <green>255</green>
+                      <blue>255</blue>
+                     </color>
+                    </brush>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </widget>
+              <widget class="QWidget" name="tab_block_month">
+               <attribute name="title">
+                <string>月度</string>
+               </attribute>
+              </widget>
+              <widget class="QWidget" name="tab_block_year">
+               <attribute name="title">
+                <string>年度</string>
+               </attribute>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </widget>
         </item>
         <item>
-         <widget class="QFrame" name="frame">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
           </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-         </widget>
+         </spacer>
         </item>
        </layout>
       </item>
       <item>
-       <spacer name="horizontalSpacer_3">
+       <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -155,7 +243,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1080</width>
+     <width>1920</width>
      <height>22</height>
     </rect>
    </property>
@@ -170,8 +258,15 @@
      <addaction name="action_open_observed_file"/>
      <addaction name="action_open_weather_file"/>
     </widget>
+    <widget class="QMenu" name="menu_block_file_load">
+     <property name="title">
+      <string>面源斑块</string>
+     </property>
+     <addaction name="action_block_rainfall_file"/>
+    </widget>
     <addaction name="separator"/>
     <addaction name="menu_5"/>
+    <addaction name="menu_block_file_load"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -189,6 +284,7 @@
       <string>仿真</string>
      </property>
      <addaction name="action_sim_green_roof"/>
+     <addaction name="action_sim_block"/>
     </widget>
     <widget class="QMenu" name="menusimulate_validate">
      <property name="title">
@@ -258,6 +354,16 @@
    </property>
   </action>
   <action name="action_Block">
+   <property name="text">
+    <string>面源斑块</string>
+   </property>
+  </action>
+  <action name="action_block_rainfall_file">
+   <property name="text">
+    <string>降雨时序文件</string>
+   </property>
+  </action>
+  <action name="action_sim_block">
    <property name="text">
     <string>面源斑块</string>
    </property>

@@ -390,7 +390,7 @@ class Ui_Block(object):
         self.verticalLayout_29.addWidget(self.buttonBox_block)
 
         self.retranslateUi(Block)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         self.buttonBox_block.accepted.connect(Block.accept) # type: ignore
         self.buttonBox_block.rejected.connect(Block.reject) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Block)

@@ -96,8 +96,8 @@
           <widget class="QDateTimeEdit" name="dateTime_start_edit">
            <property name="dateTime">
             <datetime>
-             <hour>0</hour>
-             <minute>1</minute>
+             <hour>10</hour>
+             <minute>0</minute>
              <second>0</second>
              <year>2021</year>
              <month>5</month>
@@ -113,19 +113,19 @@
           <widget class="QDateTimeEdit" name="dateTime_end_edit">
            <property name="dateTime">
             <datetime>
-             <hour>0</hour>
+             <hour>23</hour>
              <minute>0</minute>
              <second>0</second>
              <year>2021</year>
-             <month>6</month>
-             <day>29</day>
+             <month>5</month>
+             <day>25</day>
             </datetime>
            </property>
            <property name="date">
             <date>
              <year>2021</year>
-             <month>6</month>
-             <day>29</day>
+             <month>5</month>
+             <day>25</day>
             </date>
            </property>
            <property name="displayFormat">
@@ -139,6 +139,9 @@
             <widget class="QSpinBox" name="spinBox_timestep">
              <property name="minimum">
               <number>1</number>
+             </property>
+             <property name="value">
+              <number>60</number>
              </property>
             </widget>
            </item>
