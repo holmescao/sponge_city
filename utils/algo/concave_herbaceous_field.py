@@ -1,8 +1,7 @@
-import copy
 import numpy as np
 import os 
 
-class GreenRoof:
+class ConcaveHerbaceousField:
     def __init__(self,
                  underlyingsurface_loss_list=[],
                  underlyingsurface_infil_list=[],
@@ -90,17 +89,16 @@ class GreenRoof:
         
     # @property
     def sim(self, runoff, pollution):
-        
         # self.get_weather_data
-        
+
         sponge_runoff = np.zeros_like(runoff)
-        
+
         pp_metric = list(pollution.keys())
         sponge_pollution = dict(zip(pp_metric,range(len(pp_metric))))
-        reduction = 0.7
+        reduction = 0.2
         sponge_runoff[:,0] = runoff[:,0] * (1-reduction)
-        
+
         for name, val in pollution.items():
             sponge_pollution[name] = val * (1-reduction)
-        
+
         return sponge_runoff, sponge_pollution

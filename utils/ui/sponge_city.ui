@@ -62,22 +62,18 @@
            <attribute name="title">
             <string>海绵单体</string>
            </attribute>
-           <widget class="QGraphicsView" name="green_roof_sim_curve">
-            <property name="geometry">
-             <rect>
-              <x>90</x>
-              <y>80</y>
-              <width>1021</width>
-              <height>581</height>
-             </rect>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_10">
+            <item>
+             <widget class="QGraphicsView" name="green_roof_sim_curve">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
           <widget class="QWidget" name="tab_block">
            <attribute name="title">
@@ -93,102 +89,109 @@
                <attribute name="title">
                 <string>场次降雨</string>
                </attribute>
-               <widget class="QWidget" name="">
-                <property name="geometry">
-                 <rect>
-                  <x>10</x>
-                  <y>60</y>
-                  <width>1211</width>
-                  <height>391</height>
-                 </rect>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1">
-                 <property name="spacing">
-                  <number>5</number>
-                 </property>
-                 <property name="sizeConstraint">
-                  <enum>QLayout::SetMinAndMaxSize</enum>
-                 </property>
-                 <item>
-                  <widget class="QGraphicsView" name="block_rainfall_sim_res_rainfall">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="backgroundBrush">
-                    <brush brushstyle="NoBrush">
-                     <color alpha="255">
-                      <red>255</red>
-                      <green>255</green>
-                      <blue>255</blue>
-                     </color>
-                    </brush>
-                   </property>
-                   <property name="foregroundBrush">
-                    <brush brushstyle="NoBrush">
-                     <color alpha="255">
-                      <red>255</red>
-                      <green>255</green>
-                      <blue>255</blue>
-                     </color>
-                    </brush>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QGraphicsView" name="block_rainfall_sim_res_pollution">
-                   <property name="backgroundBrush">
-                    <brush brushstyle="NoBrush">
-                     <color alpha="255">
-                      <red>255</red>
-                      <green>255</green>
-                      <blue>255</blue>
-                     </color>
-                    </brush>
-                   </property>
-                   <property name="foregroundBrush">
-                    <brush brushstyle="NoBrush">
-                     <color alpha="255">
-                      <red>255</red>
-                      <green>255</green>
-                      <blue>255</blue>
-                     </color>
-                    </brush>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QGraphicsView" name="block_rainfall_sim_res_runoff">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="backgroundBrush">
-                    <brush brushstyle="NoBrush">
-                     <color alpha="255">
-                      <red>255</red>
-                      <green>255</green>
-                      <blue>255</blue>
-                     </color>
-                    </brush>
-                   </property>
-                   <property name="foregroundBrush">
-                    <brush brushstyle="NoBrush">
-                     <color alpha="255">
-                      <red>255</red>
-                      <green>255</green>
-                      <blue>255</blue>
-                     </color>
-                    </brush>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
+               <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,1">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1">
+                  <property name="spacing">
+                   <number>5</number>
+                  </property>
+                  <property name="sizeConstraint">
+                   <enum>QLayout::SetMinAndMaxSize</enum>
+                  </property>
+                  <item>
+                   <widget class="QGraphicsView" name="block_rainfall_sim_res_rainfall">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="backgroundBrush">
+                     <brush brushstyle="NoBrush">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </property>
+                    <property name="foregroundBrush">
+                     <brush brushstyle="NoBrush">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QGraphicsView" name="block_rainfall_sim_res_runoff">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="backgroundBrush">
+                     <brush brushstyle="NoBrush">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </property>
+                    <property name="foregroundBrush">
+                     <brush brushstyle="NoBrush">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QGraphicsView" name="block_rainfall_sim_res_pollution">
+                    <property name="backgroundBrush">
+                     <brush brushstyle="NoBrush">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </property>
+                    <property name="foregroundBrush">
+                     <brush brushstyle="NoBrush">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <spacer name="verticalSpacer_2">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
               </widget>
               <widget class="QWidget" name="tab_block_month">
                <attribute name="title">
@@ -196,6 +199,261 @@
                </attribute>
               </widget>
               <widget class="QWidget" name="tab_block_year">
+               <attribute name="title">
+                <string>年度</string>
+               </attribute>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_sponge_block">
+           <attribute name="title">
+            <string>海绵地块</string>
+           </attribute>
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <item>
+             <widget class="QTabWidget" name="tabWidget_sponge_block_res">
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <widget class="QWidget" name="tab_sponge_block_rainfall">
+               <attribute name="title">
+                <string>场次降雨</string>
+               </attribute>
+               <layout class="QHBoxLayout" name="horizontalLayout_7">
+                <item>
+                 <widget class="QScrollArea" name="scrollArea">
+                  <property name="verticalScrollBarPolicy">
+                   <enum>Qt::ScrollBarAlwaysOn</enum>
+                  </property>
+                  <property name="horizontalScrollBarPolicy">
+                   <enum>Qt::ScrollBarAlwaysOff</enum>
+                  </property>
+                  <property name="widgetResizable">
+                   <bool>false</bool>
+                  </property>
+                  <widget class="QWidget" name="scrollAreaWidgetContents">
+                   <property name="geometry">
+                    <rect>
+                     <x>0</x>
+                     <y>0</y>
+                     <width>1180</width>
+                     <height>1300</height>
+                    </rect>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_8">
+                    <property name="sizeConstraint">
+                     <enum>QLayout::SetNoConstraint</enum>
+                    </property>
+                    <item>
+                     <layout class="QVBoxLayout" name="verticalLayout_3">
+                      <property name="sizeConstraint">
+                       <enum>QLayout::SetNoConstraint</enum>
+                      </property>
+                      <item>
+                       <layout class="QHBoxLayout" name="horizontalLayout_4">
+                        <property name="sizeConstraint">
+                         <enum>QLayout::SetNoConstraint</enum>
+                        </property>
+                        <item>
+                         <widget class="QGraphicsView" name="sponge_block_rainfallrunoff_sim_res_rainfall">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="backgroundBrush">
+                           <brush brushstyle="NoBrush">
+                            <color alpha="255">
+                             <red>255</red>
+                             <green>255</green>
+                             <blue>255</blue>
+                            </color>
+                           </brush>
+                          </property>
+                          <property name="foregroundBrush">
+                           <brush brushstyle="NoBrush">
+                            <color alpha="255">
+                             <red>255</red>
+                             <green>255</green>
+                             <blue>255</blue>
+                            </color>
+                           </brush>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QGraphicsView" name="sponge_block_pollution_sim_res_rainfall_SS">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="backgroundBrush">
+                           <brush brushstyle="NoBrush">
+                            <color alpha="255">
+                             <red>255</red>
+                             <green>255</green>
+                             <blue>255</blue>
+                            </color>
+                           </brush>
+                          </property>
+                          <property name="foregroundBrush">
+                           <brush brushstyle="NoBrush">
+                            <color alpha="255">
+                             <red>255</red>
+                             <green>255</green>
+                             <blue>255</blue>
+                            </color>
+                           </brush>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                      <item>
+                       <layout class="QHBoxLayout" name="horizontalLayout_5">
+                        <property name="sizeConstraint">
+                         <enum>QLayout::SetNoConstraint</enum>
+                        </property>
+                        <item>
+                         <widget class="QGraphicsView" name="sponge_block_pollution_sim_res_rainfall_COD">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="backgroundBrush">
+                           <brush brushstyle="NoBrush">
+                            <color alpha="255">
+                             <red>255</red>
+                             <green>255</green>
+                             <blue>255</blue>
+                            </color>
+                           </brush>
+                          </property>
+                          <property name="foregroundBrush">
+                           <brush brushstyle="NoBrush">
+                            <color alpha="255">
+                             <red>255</red>
+                             <green>255</green>
+                             <blue>255</blue>
+                            </color>
+                           </brush>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QGraphicsView" name="sponge_block_pollution_sim_res_rainfall_TP">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="backgroundBrush">
+                           <brush brushstyle="NoBrush">
+                            <color alpha="255">
+                             <red>255</red>
+                             <green>255</green>
+                             <blue>255</blue>
+                            </color>
+                           </brush>
+                          </property>
+                          <property name="foregroundBrush">
+                           <brush brushstyle="NoBrush">
+                            <color alpha="255">
+                             <red>255</red>
+                             <green>255</green>
+                             <blue>255</blue>
+                            </color>
+                           </brush>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                      <item>
+                       <layout class="QHBoxLayout" name="horizontalLayout_6">
+                        <property name="sizeConstraint">
+                         <enum>QLayout::SetNoConstraint</enum>
+                        </property>
+                        <item>
+                         <widget class="QGraphicsView" name="sponge_block_pollution_sim_res_rainfall_TN">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="backgroundBrush">
+                           <brush brushstyle="NoBrush">
+                            <color alpha="255">
+                             <red>255</red>
+                             <green>255</green>
+                             <blue>255</blue>
+                            </color>
+                           </brush>
+                          </property>
+                          <property name="foregroundBrush">
+                           <brush brushstyle="NoBrush">
+                            <color alpha="255">
+                             <red>255</red>
+                             <green>255</green>
+                             <blue>255</blue>
+                            </color>
+                           </brush>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QGraphicsView" name="sponge_block_pollution_sim_res_rainfall_NH3N">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="backgroundBrush">
+                           <brush brushstyle="NoBrush">
+                            <color alpha="255">
+                             <red>255</red>
+                             <green>255</green>
+                             <blue>255</blue>
+                            </color>
+                           </brush>
+                          </property>
+                          <property name="foregroundBrush">
+                           <brush brushstyle="NoBrush">
+                            <color alpha="255">
+                             <red>255</red>
+                             <green>255</green>
+                             <blue>255</blue>
+                            </color>
+                           </brush>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </widget>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tab_sponge_block_month">
+               <attribute name="title">
+                <string>月度</string>
+               </attribute>
+              </widget>
+              <widget class="QWidget" name="tab_sponge_block_year">
                <attribute name="title">
                 <string>年度</string>
                </attribute>
@@ -274,6 +532,8 @@
     </property>
     <addaction name="actionDates"/>
     <addaction name="action_Block"/>
+    <addaction name="action_SpongeBlock"/>
+    <addaction name="action_rain_generate"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -285,6 +545,7 @@
      </property>
      <addaction name="action_sim_green_roof"/>
      <addaction name="action_sim_block"/>
+     <addaction name="action_sim_sponge_block"/>
     </widget>
     <widget class="QMenu" name="menusimulate_validate">
      <property name="title">
@@ -366,6 +627,21 @@
   <action name="action_sim_block">
    <property name="text">
     <string>面源斑块</string>
+   </property>
+  </action>
+  <action name="action_SpongeBlock">
+   <property name="text">
+    <string>海绵地块</string>
+   </property>
+  </action>
+  <action name="action_sim_sponge_block">
+   <property name="text">
+    <string>海绵地块</string>
+   </property>
+  </action>
+  <action name="action_rain_generate">
+   <property name="text">
+    <string>雨型生成</string>
    </property>
   </action>
  </widget>

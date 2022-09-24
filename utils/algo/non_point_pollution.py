@@ -24,7 +24,7 @@ class Struct(object):
         
 
 class NonPointPollution:
-    def __init__(self, weather_file_path) -> None:
+    def __init__(self, weather_file_path="") -> None:
         default_params_file_path = 'utils/algo/non_point_pollution_params.xlsx'
         pollutantdata,ludata,usdata = self.load_block_default_params(default_params_file_path)
         lutype, ustype, pltype, usloss, usinfil, P, struct_P = self.preprocess_block_params(ludata,usdata,pollutantdata)
@@ -41,8 +41,12 @@ class NonPointPollution:
 
         # 仿真起止时间，及时间步长
         self.start_dt_str = "2022-08-21 00:00"
-        self.end_dt_str = "2022-08-21 06:00"
+        self.end_dt_str = "2024-08-21 00:00"
         self.Tstep = 1               # time step (hr)
+        
+        self.rainfall = None  # 降雨量，mm/hr
+        #设置循环长度 
+        self.LoopCount = 0
         
         # 文件路径
         self.weather_file_path = weather_file_path
@@ -315,19 +319,22 @@ class NonPointPollution:
     
     @property
     def sim(self):
+        # TODO:现在是小时的，要换成分钟的
+        # TODO:rain和runoff是相同的。。。
         """2. 单位面积的径流污染产生过程线模型"""
         # self.get_weather_data
         # 2.1 rainfall runoff process simulation
         # 初始化
-        nhour = self.LoopCount
+        expand_time = 5*60 # 延长5小时
+        nhour = self.LoopCount + expand_time
         # nus = len(self.underlyingsurface_type_list)
         # nlu = len(self.landuse_type_list)
         nus = 1
         nlu = 1
         npl = len(self.Pollution)
         
-        rain = self.rainfall
-        evap = np.zeros_like(rain) + 0.2
+        rain = np.concatenate((self.rainfall,np.zeros(expand_time)),axis=0) / 60
+        evap = np.zeros_like(rain) + 0.2 # TODO：是否除以60
         
         # 获取 土地利用类型 和下垫面 类型
         lu_ind = np.where(self.landuse_type_list ==self.landuse_type)[0][0]
@@ -336,15 +343,9 @@ class NonPointPollution:
         usloss = np.array([self.underlyingsurface_loss_list[us_ind]])
         usinfil = np.array([self.underlyingsurface_infil_list[us_ind]])
         
-        P = self.Pollution_dict
-        
         storage = np.zeros((nhour, nus))
         runoff = np.zeros((nhour, nus))
         storage[0,:] = usloss.T
-        B = np.zeros((nhour, nus*nlu*npl))
-        W = np.zeros((nhour, nus*nlu*npl))
-
-        pollution = dict()
         # 每个时刻不同下垫面的剩余蓄水能力和径流量动态变化
         for t in range(1, nhour):
             for u in range(nus):
@@ -355,12 +356,28 @@ class NonPointPollution:
                     runoff[t, u] = 0 - storage[t, u]
                     storage[t, u] = 0
         
+        # 获取下雨至雨停后径流为0前的数据
+        dry_period = runoff[self.LoopCount:]
+        zero_runoff = np.where(dry_period==0)[0][0]
+        useful_period = self.LoopCount + int(zero_runoff)
+        useful_runoff = runoff[:useful_period] *60
+        # 与用户定义的仿真周期对比
+        dates = pd.date_range(start=self.start_dt_str,end=self.end_dt_str,freq="1min")
+        num_dates = len(dates)
+        useful_period = min(useful_period,num_dates)
+        
+        
+        # TODO：需要改成污染物浓度，当前是污染物负荷
         # 每个时刻各个土地利用类型、下垫面类型的每一种污染物含量动态变化
-        for t in range(1, nhour):
-            for p, name in enumerate(self.pollution_type_list):
-                for l in range(nlu):
-                    for u in range(nus):
-                        if P[name]["EMC"][u] == 0:
+        P = self.Pollution_dict
+        B = np.zeros((useful_period, nus*nlu*npl))
+        W = np.zeros((useful_period, nus*nlu*npl))
+        pollution = dict()
+        for t in range(1, useful_period): # 时间
+            for p, name in enumerate(self.pollution_type_list): # 污染物类型
+                for l in range(nlu):# 土地利用类型
+                    for u in range(nus):# 下垫面类型
+                        if P[name]["EMC"][u] == 0: # 污染物EMC的值
                             if rain[t] == 0:
                                 B[t, p*nlu*nus + l*nus + u] = min(P[name]["Bmax"][l], 
                                                                         B[t-1, p*nlu*nus + l*nus + u] + P[name]["bt"][l])
@@ -370,12 +387,13 @@ class NonPointPollution:
                                 B[t, p*nlu*nus + l*nus + u] = max(0, B[t-1, p*nlu*nus + l*nus + u] \
                                     - W[t, p*nlu*nus + l*nus + u])
                         else:
-                            W[t, p*nlu*nus + l*nus + u] = runoff[t, u] * P[name]["EMC"][u]
+                            W[t, p*nlu*nus + l*nus + u] = runoff[t, u] * P[name]["EMC"][u] # 负荷
 
         for p, name in enumerate(self.pollution_type_list):
             pollution[name] = W[:,p]
         
-        return rain, runoff, pollution
+        return self.rainfall, useful_runoff, pollution
+        # return rain, runoff, pollution
         
     
     

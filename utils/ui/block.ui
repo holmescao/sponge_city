@@ -187,7 +187,11 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_Bmax_SS"/>
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_Bmax_SS">
+                    <property name="maximum">
+                     <double>99999.000000000000000</double>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -201,7 +205,11 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_Bmax_COD"/>
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_Bmax_COD">
+                    <property name="maximum">
+                     <double>99999.000000000000000</double>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -215,7 +223,11 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_Bmax_TP"/>
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_Bmax_TP">
+                    <property name="maximum">
+                     <double>99999.000000000000000</double>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -229,7 +241,11 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_Bmax_TN"/>
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_Bmax_TN">
+                    <property name="maximum">
+                     <double>99999.000000000000000</double>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -243,7 +259,11 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_Bmax_NH3N"/>
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_Bmax_NH3N">
+                    <property name="maximum">
+                     <double>99999.000000000000000</double>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -270,7 +290,11 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_bt_SS"/>
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_bt_SS">
+                    <property name="maximum">
+                     <double>99999.000000000000000</double>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -284,7 +308,11 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_bt_COD"/>
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_bt_COD">
+                    <property name="maximum">
+                     <double>99999.000000000000000</double>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -298,7 +326,11 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_bt_TP"/>
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_bt_TP">
+                    <property name="maximum">
+                     <double>99999.000000000000000</double>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -312,7 +344,11 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_bt_TN"/>
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_bt_TN">
+                    <property name="maximum">
+                     <double>99999.000000000000000</double>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -326,7 +362,11 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_bt_NH3N"/>
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_bt_NH3N">
+                    <property name="maximum">
+                     <double>99999.000000000000000</double>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -430,7 +470,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C1_SS"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C1_SS">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -444,7 +488,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C1_COD"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C1_COD">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -458,7 +506,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C1_TP"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C1_TP">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -472,7 +524,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C1_TN"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C1_TN">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -486,7 +542,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C1_NH3N"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C1_NH3N">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -513,7 +573,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C2_SS"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C2_SS">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -527,7 +591,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C2_COD"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C2_COD">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -541,7 +609,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C2_TP"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C2_TP">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -555,7 +627,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C2_TN"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C2_TN">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -569,7 +645,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C2_NH3N"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_C2_NH3N">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -596,7 +676,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_EMC_SS"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_EMC_SS">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -610,7 +694,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_EMC_COD"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_EMC_COD">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -624,7 +712,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_EMC_TP"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_EMC_TP">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -638,7 +730,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_EMC_TN"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_EMC_TN">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -652,7 +748,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_EMC_NH3N"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_EMC_NH3N">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -679,7 +779,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_max_init_loss"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_max_init_loss">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -693,7 +797,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_infiltration_rate"/>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_infiltration_rate">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
