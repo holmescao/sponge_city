@@ -57,7 +57,8 @@ class Ui_Block(object):
         self.comboBox_landuse.addItem("")
         self.comboBox_landuse.addItem("")
         self.horizontalLayout_5.addWidget(self.comboBox_landuse)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem)
         self.horizontalLayout_5.setStretch(0, 4)
         self.horizontalLayout_5.setStretch(1, 6)
@@ -73,7 +74,8 @@ class Ui_Block(object):
         self.label_Bmax_SS = QtWidgets.QLabel(self.groupBox_Bmax)
         self.label_Bmax_SS.setObjectName("label_Bmax_SS")
         self.verticalLayout.addWidget(self.label_Bmax_SS)
-        self.doubleSpinBox_Bmax_SS = QtWidgets.QDoubleSpinBox(self.groupBox_Bmax)
+        self.doubleSpinBox_Bmax_SS = QtWidgets.QDoubleSpinBox(
+            self.groupBox_Bmax)
         self.doubleSpinBox_Bmax_SS.setMaximum(99999.0)
         self.doubleSpinBox_Bmax_SS.setObjectName("doubleSpinBox_Bmax_SS")
         self.verticalLayout.addWidget(self.doubleSpinBox_Bmax_SS)
@@ -83,7 +85,8 @@ class Ui_Block(object):
         self.label_Bmax_COD = QtWidgets.QLabel(self.groupBox_Bmax)
         self.label_Bmax_COD.setObjectName("label_Bmax_COD")
         self.verticalLayout_2.addWidget(self.label_Bmax_COD)
-        self.doubleSpinBox_Bmax_COD = QtWidgets.QDoubleSpinBox(self.groupBox_Bmax)
+        self.doubleSpinBox_Bmax_COD = QtWidgets.QDoubleSpinBox(
+            self.groupBox_Bmax)
         self.doubleSpinBox_Bmax_COD.setMaximum(99999.0)
         self.doubleSpinBox_Bmax_COD.setObjectName("doubleSpinBox_Bmax_COD")
         self.verticalLayout_2.addWidget(self.doubleSpinBox_Bmax_COD)
@@ -93,7 +96,8 @@ class Ui_Block(object):
         self.label_Bmax_TP = QtWidgets.QLabel(self.groupBox_Bmax)
         self.label_Bmax_TP.setObjectName("label_Bmax_TP")
         self.verticalLayout_3.addWidget(self.label_Bmax_TP)
-        self.doubleSpinBox_Bmax_TP = QtWidgets.QDoubleSpinBox(self.groupBox_Bmax)
+        self.doubleSpinBox_Bmax_TP = QtWidgets.QDoubleSpinBox(
+            self.groupBox_Bmax)
         self.doubleSpinBox_Bmax_TP.setMaximum(99999.0)
         self.doubleSpinBox_Bmax_TP.setObjectName("doubleSpinBox_Bmax_TP")
         self.verticalLayout_3.addWidget(self.doubleSpinBox_Bmax_TP)
@@ -103,7 +107,8 @@ class Ui_Block(object):
         self.label_Bmax_TN = QtWidgets.QLabel(self.groupBox_Bmax)
         self.label_Bmax_TN.setObjectName("label_Bmax_TN")
         self.verticalLayout_4.addWidget(self.label_Bmax_TN)
-        self.doubleSpinBox_Bmax_TN = QtWidgets.QDoubleSpinBox(self.groupBox_Bmax)
+        self.doubleSpinBox_Bmax_TN = QtWidgets.QDoubleSpinBox(
+            self.groupBox_Bmax)
         self.doubleSpinBox_Bmax_TN.setMaximum(99999.0)
         self.doubleSpinBox_Bmax_TN.setObjectName("doubleSpinBox_Bmax_TN")
         self.verticalLayout_4.addWidget(self.doubleSpinBox_Bmax_TN)
@@ -113,7 +118,8 @@ class Ui_Block(object):
         self.label_Bmax_NH3N = QtWidgets.QLabel(self.groupBox_Bmax)
         self.label_Bmax_NH3N.setObjectName("label_Bmax_NH3N")
         self.verticalLayout_5.addWidget(self.label_Bmax_NH3N)
-        self.doubleSpinBox_Bmax_NH3N = QtWidgets.QDoubleSpinBox(self.groupBox_Bmax)
+        self.doubleSpinBox_Bmax_NH3N = QtWidgets.QDoubleSpinBox(
+            self.groupBox_Bmax)
         self.doubleSpinBox_Bmax_NH3N.setMaximum(99999.0)
         self.doubleSpinBox_Bmax_NH3N.setObjectName("doubleSpinBox_Bmax_NH3N")
         self.verticalLayout_5.addWidget(self.doubleSpinBox_Bmax_NH3N)
@@ -179,7 +185,8 @@ class Ui_Block(object):
         self.horizontalLayout_4.addLayout(self.horizontalLayout_2)
         self.verticalLayout_11.addWidget(self.groupBox_bt)
         self.verticalLayout_28.addLayout(self.verticalLayout_11)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem1 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_28.addItem(spacerItem1)
         self.horizontalLayout_6.addLayout(self.verticalLayout_28)
         self.tabWidget.addTab(self.tab, "")
@@ -192,7 +199,8 @@ class Ui_Block(object):
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
         self.comboBox_underlyingsurface = QtWidgets.QComboBox(self.tab1)
-        self.comboBox_underlyingsurface.setObjectName("comboBox_underlyingsurface")
+        self.comboBox_underlyingsurface.setObjectName(
+            "comboBox_underlyingsurface")
         self.comboBox_underlyingsurface.addItem("")
         self.comboBox_underlyingsurface.addItem("")
         self.comboBox_underlyingsurface.addItem("")
@@ -200,7 +208,8 @@ class Ui_Block(object):
         self.comboBox_underlyingsurface.addItem("")
         self.comboBox_underlyingsurface.addItem("")
         self.horizontalLayout_9.addWidget(self.comboBox_underlyingsurface)
-        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem2 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_9.addItem(spacerItem2)
         self.horizontalLayout_9.setStretch(0, 1)
         self.horizontalLayout_9.setStretch(1, 5)
@@ -342,7 +351,8 @@ class Ui_Block(object):
         self.label_EMC_COD = QtWidgets.QLabel(self.groupBox_EMC)
         self.label_EMC_COD.setObjectName("label_EMC_COD")
         self.verticalLayout_23.addWidget(self.label_EMC_COD)
-        self.doubleSpinBox_EMC_COD = QtWidgets.QDoubleSpinBox(self.groupBox_EMC)
+        self.doubleSpinBox_EMC_COD = QtWidgets.QDoubleSpinBox(
+            self.groupBox_EMC)
         self.doubleSpinBox_EMC_COD.setMaximum(99999.0)
         self.doubleSpinBox_EMC_COD.setObjectName("doubleSpinBox_EMC_COD")
         self.verticalLayout_23.addWidget(self.doubleSpinBox_EMC_COD)
@@ -372,7 +382,8 @@ class Ui_Block(object):
         self.label_EMC_NH3N = QtWidgets.QLabel(self.groupBox_EMC)
         self.label_EMC_NH3N.setObjectName("label_EMC_NH3N")
         self.verticalLayout_26.addWidget(self.label_EMC_NH3N)
-        self.doubleSpinBox_EMC_NH3N = QtWidgets.QDoubleSpinBox(self.groupBox_EMC)
+        self.doubleSpinBox_EMC_NH3N = QtWidgets.QDoubleSpinBox(
+            self.groupBox_EMC)
         self.doubleSpinBox_EMC_NH3N.setMaximum(99999.0)
         self.doubleSpinBox_EMC_NH3N.setObjectName("doubleSpinBox_EMC_NH3N")
         self.verticalLayout_26.addWidget(self.doubleSpinBox_EMC_NH3N)
@@ -390,9 +401,11 @@ class Ui_Block(object):
         self.label_max_init_loss = QtWidgets.QLabel(self.groupBox_other)
         self.label_max_init_loss.setObjectName("label_max_init_loss")
         self.horizontalLayout_13.addWidget(self.label_max_init_loss)
-        self.doubleSpinBox_max_init_loss = QtWidgets.QDoubleSpinBox(self.groupBox_other)
+        self.doubleSpinBox_max_init_loss = QtWidgets.QDoubleSpinBox(
+            self.groupBox_other)
         self.doubleSpinBox_max_init_loss.setMaximum(99999.0)
-        self.doubleSpinBox_max_init_loss.setObjectName("doubleSpinBox_max_init_loss")
+        self.doubleSpinBox_max_init_loss.setObjectName(
+            "doubleSpinBox_max_init_loss")
         self.horizontalLayout_13.addWidget(self.doubleSpinBox_max_init_loss)
         self.horizontalLayout_15.addLayout(self.horizontalLayout_13)
         self.horizontalLayout_14 = QtWidgets.QHBoxLayout()
@@ -400,10 +413,13 @@ class Ui_Block(object):
         self.label_infiltration_rate = QtWidgets.QLabel(self.groupBox_other)
         self.label_infiltration_rate.setObjectName("label_infiltration_rate")
         self.horizontalLayout_14.addWidget(self.label_infiltration_rate)
-        self.doubleSpinBox_infiltration_rate = QtWidgets.QDoubleSpinBox(self.groupBox_other)
+        self.doubleSpinBox_infiltration_rate = QtWidgets.QDoubleSpinBox(
+            self.groupBox_other)
         self.doubleSpinBox_infiltration_rate.setMaximum(99999.0)
-        self.doubleSpinBox_infiltration_rate.setObjectName("doubleSpinBox_infiltration_rate")
-        self.horizontalLayout_14.addWidget(self.doubleSpinBox_infiltration_rate)
+        self.doubleSpinBox_infiltration_rate.setObjectName(
+            "doubleSpinBox_infiltration_rate")
+        self.horizontalLayout_14.addWidget(
+            self.doubleSpinBox_infiltration_rate)
         self.horizontalLayout_15.addLayout(self.horizontalLayout_14)
         self.horizontalLayout_16.addLayout(self.horizontalLayout_15)
         self.verticalLayout_27.addWidget(self.groupBox_other)
@@ -412,14 +428,15 @@ class Ui_Block(object):
         self.verticalLayout_29.addWidget(self.tabWidget)
         self.buttonBox_block = QtWidgets.QDialogButtonBox(Block)
         self.buttonBox_block.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox_block.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox_block.setStandardButtons(
+            QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox_block.setObjectName("buttonBox_block")
         self.verticalLayout_29.addWidget(self.buttonBox_block)
 
         self.retranslateUi(Block)
         self.tabWidget.setCurrentIndex(0)
-        self.buttonBox_block.accepted.connect(Block.accept) # type: ignore
-        self.buttonBox_block.rejected.connect(Block.reject) # type: ignore
+        self.buttonBox_block.accepted.connect(Block.accept)  # type: ignore
+        self.buttonBox_block.rejected.connect(Block.reject)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Block)
 
     def retranslateUi(self, Block):
@@ -460,13 +477,20 @@ class Ui_Block(object):
         self.label_bt_TP.setText(_translate("Block", "TP"))
         self.label_bt_TN.setText(_translate("Block", "TN"))
         self.label_bt_NH3N.setText(_translate("Block", "NH3N"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Block", "土地利用类型"))
-        self.comboBox_underlyingsurface.setItemText(0, _translate("Block", "请选择"))
-        self.comboBox_underlyingsurface.setItemText(1, _translate("Block", "屋顶"))
-        self.comboBox_underlyingsurface.setItemText(2, _translate("Block", "道路"))
-        self.comboBox_underlyingsurface.setItemText(3, _translate("Block", "硬地"))
-        self.comboBox_underlyingsurface.setItemText(4, _translate("Block", "绿地"))
-        self.comboBox_underlyingsurface.setItemText(5, _translate("Block", "水体"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(
+            self.tab), _translate("Block", "土地利用类型"))
+        self.comboBox_underlyingsurface.setItemText(
+            0, _translate("Block", "请选择"))
+        self.comboBox_underlyingsurface.setItemText(
+            1, _translate("Block", "屋顶"))
+        self.comboBox_underlyingsurface.setItemText(
+            2, _translate("Block", "道路"))
+        self.comboBox_underlyingsurface.setItemText(
+            3, _translate("Block", "硬地"))
+        self.comboBox_underlyingsurface.setItemText(
+            4, _translate("Block", "绿地"))
+        self.comboBox_underlyingsurface.setItemText(
+            5, _translate("Block", "水体"))
         self.groupBox_C1.setTitle(_translate("Block", "C1"))
         self.label_C1_SS.setText(_translate("Block", "SS"))
         self.label_C1_COD.setText(_translate("Block", "COD"))
@@ -488,4 +512,5 @@ class Ui_Block(object):
         self.groupBox_other.setTitle(_translate("Block", "其他参数"))
         self.label_max_init_loss.setText(_translate("Block", "最大初损"))
         self.label_infiltration_rate.setText(_translate("Block", "下渗率"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab1), _translate("Block", "下垫面类型"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(
+            self.tab1), _translate("Block", "下垫面类型"))
