@@ -21,7 +21,8 @@ class Ui_RainGenerate(object):
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem)
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
@@ -65,32 +66,40 @@ class Ui_RainGenerate(object):
         self.verticalLayout_2.addLayout(self.verticalLayout)
         self.buttonBox = QtWidgets.QDialogButtonBox(RainGenerate)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(
+            QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.verticalLayout_2.addWidget(self.buttonBox)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem1 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem1)
         self.verticalLayout_2.setStretch(0, 1)
         self.verticalLayout_2.setStretch(1, 3)
         self.verticalLayout_2.setStretch(2, 1)
         self.verticalLayout_2.setStretch(3, 1)
         self.horizontalLayout_4.addLayout(self.verticalLayout_2)
-        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem2 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem2)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem3 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem3)
         self.graphicsView_rain_generate = QtWidgets.QGraphicsView(RainGenerate)
-        self.graphicsView_rain_generate.setObjectName("graphicsView_rain_generate")
+        self.graphicsView_rain_generate.setObjectName(
+            "graphicsView_rain_generate")
+        self.graphicsView_rain_generate.setFixedSize(918, 676)
         self.verticalLayout_3.addWidget(self.graphicsView_rain_generate)
-        spacerItem4 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem4 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem4)
         self.verticalLayout_3.setStretch(0, 1)
         self.verticalLayout_3.setStretch(1, 4)
         self.verticalLayout_3.setStretch(2, 1)
         self.horizontalLayout_4.addLayout(self.verticalLayout_3)
-        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem5 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem5)
         self.horizontalLayout_4.setStretch(0, 4)
         self.horizontalLayout_4.setStretch(1, 1)
@@ -99,13 +108,15 @@ class Ui_RainGenerate(object):
         self.horizontalLayout_5.addLayout(self.horizontalLayout_4)
 
         self.retranslateUi(RainGenerate)
-        self.buttonBox.accepted.connect(RainGenerate.accept) # type: ignore
-        self.buttonBox.rejected.connect(RainGenerate.reject) # type: ignore
+        self.buttonBox.accepted.connect(RainGenerate.accept)  # type: ignore
+        self.buttonBox.rejected.connect(RainGenerate.reject)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(RainGenerate)
 
     def retranslateUi(self, RainGenerate):
         _translate = QtCore.QCoreApplication.translate
         RainGenerate.setWindowTitle(_translate("RainGenerate", "雨型生成"))
         self.label_rain_peak.setText(_translate("RainGenerate", "雨峰系数（0~1）"))
-        self.label_return_period.setText(_translate("RainGenerate", "降雨重现期（年）"))
-        self.label_rain_duration.setText(_translate("RainGenerate", "降雨历时（分钟）"))
+        self.label_return_period.setText(
+            _translate("RainGenerate", "降雨重现期（年）"))
+        self.label_rain_duration.setText(
+            _translate("RainGenerate", "降雨历时（分钟）"))

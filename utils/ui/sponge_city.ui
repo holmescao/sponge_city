@@ -509,22 +509,10 @@
     <property name="title">
      <string>文件</string>
     </property>
-    <widget class="QMenu" name="menu_5">
-     <property name="title">
-      <string>绿色屋顶</string>
-     </property>
-     <addaction name="action_open_observed_file"/>
-     <addaction name="action_open_weather_file"/>
-    </widget>
-    <widget class="QMenu" name="menu_block_file_load">
-     <property name="title">
-      <string>面源斑块</string>
-     </property>
-     <addaction name="action_block_rainfall_file"/>
-    </widget>
     <addaction name="separator"/>
-    <addaction name="menu_5"/>
-    <addaction name="menu_block_file_load"/>
+    <addaction name="action_weather_file_load"/>
+    <addaction name="action_district_file_load"/>
+    <addaction name="action_expr_res_export"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -543,9 +531,23 @@
      <property name="title">
       <string>仿真</string>
      </property>
-     <addaction name="action_sim_green_roof"/>
-     <addaction name="action_sim_block"/>
-     <addaction name="action_sim_sponge_block"/>
+     <widget class="QMenu" name="menu_single_sponge">
+      <property name="title">
+       <string>海绵单体</string>
+      </property>
+      <addaction name="action_sim_green_roof"/>
+      <addaction name="action_sim_permeablepavement"/>
+     </widget>
+     <widget class="QMenu" name="menu_block">
+      <property name="title">
+       <string>斑块</string>
+      </property>
+      <addaction name="action_sim_block"/>
+      <addaction name="action_sim_sponge_block"/>
+     </widget>
+     <addaction name="menu_single_sponge"/>
+     <addaction name="menu_block"/>
+     <addaction name="action_sim_district"/>
     </widget>
     <widget class="QMenu" name="menusimulate_validate">
      <property name="title">
@@ -642,6 +644,36 @@
   <action name="action_rain_generate">
    <property name="text">
     <string>雨型生成</string>
+   </property>
+  </action>
+  <action name="action_sim_permeablepavement">
+   <property name="text">
+    <string>渗透铺装</string>
+   </property>
+  </action>
+  <action name="action_weather_file_load">
+   <property name="text">
+    <string>导入气象文件</string>
+   </property>
+  </action>
+  <action name="actiongreen">
+   <property name="text">
+    <string>green</string>
+   </property>
+  </action>
+  <action name="action_expr_res_export">
+   <property name="text">
+    <string>导出结果</string>
+   </property>
+  </action>
+  <action name="action_district_file_load">
+   <property name="text">
+    <string>导入城市文件</string>
+   </property>
+  </action>
+  <action name="action_sim_district">
+   <property name="text">
+    <string>城区</string>
    </property>
   </action>
  </widget>

@@ -9,7 +9,45 @@ from utils.algo.general_functions import check_datetime_setting
 
 class NonPointControl:
     def __init__(self) -> None:
-        pass
+        # 仿真起止时间，及时间步长
+        self.start_dt_str = "2022-08-21 00:00"
+        self.end_dt_str = "2024-08-21 00:00"
+        self.Tstep = 1               # time step (hr)
+        self.ADP = -1  # 雨前干旱时长（day）
+
+    def pack_params(self, sponge_block_Dialog, NonPointPollution):
+
+        # 地块类型 与 降雨数据
+        sponge_tpye_ratio_map = self.cal_sponge_block_ratio(
+            sponge_block_Dialog)
+        params_dict = {
+            "地块类型": {
+                "土地利用类型": sponge_block_Dialog.lineEdit_landuse.text(),
+                "下垫面类型": sponge_block_Dialog.lineEdit_underlying.text(),
+                "地块面积": sponge_block_Dialog.spinBox_area.value(),
+            },
+            # TODO："雨型生成"指标
+        }
+        # 海绵类型
+        params_dict["海绵比例"] = {}
+        for sponge, ratio in sponge_tpye_ratio_map.items():
+            params_dict["海绵比例"][sponge] = ratio
+
+        # 污染物参数
+        lu_ind = np.where(NonPointPollution.landuse_type_list ==
+                          NonPointPollution.landuse_type)[0][0]
+        us_ind = np.where(NonPointPollution.underlyingsurface_type_list ==
+                          NonPointPollution.underlyingsurface_type)[0][0]
+        params_dict["污染物参数"] = {}
+        for p_name, param in NonPointPollution.Pollution_dict.items():
+            params_dict["污染物参数"][p_name] = {}
+            for p, v in param.items():
+                if p in ["Bmax", "bt"]:
+                    params_dict["污染物参数"][p_name][p] = v[lu_ind]
+                else:
+                    params_dict["污染物参数"][p_name][p] = v[us_ind]
+
+        return params_dict
 
     def sponge_block_sim(self, main, NonPointPollution,
                          GreenRoof, PermeablePavement, BioretentionPonds, ConcaveHerbaceousField,
@@ -18,6 +56,13 @@ class NonPointControl:
         self.start_dt_str = main.start_dt_str
         self.end_dt_str = main.end_dt_str
         self.Tstep = main.time_step
+        # ADP
+        self.ADP = main.ADP
+        NonPointPollution.ADP = main.ADP
+        GreenRoof.ADP = main.ADP
+        PermeablePavement.ADP = main.ADP
+        BioretentionPonds.ADP = main.ADP
+        ConcaveHerbaceousField.ADP = main.ADP
 
         if hasattr(main, 'weather_file_path'):
             # 天气文件赋值
@@ -26,7 +71,7 @@ class NonPointControl:
             PermeablePavement.weather_file_path = main.weather_file_path
             BioretentionPonds.weather_file_path = main.weather_file_path
             ConcaveHerbaceousField.weather_file_path = main.weather_file_path
-
+            # TODO：之后每个海绵都要加，因为现在只是用NonPointPollution来计算污染，其他海绵都是简化
             NonPointPollution.get_weather_data
 
             # 检查时间是否正确
@@ -76,18 +121,31 @@ class NonPointControl:
         ConcaveHerbaceousField.underlyingsurface_loss_list = NonPointPollution.underlyingsurface_loss_list
         ConcaveHerbaceousField.underlyingsurface_infil_list = NonPointPollution.underlyingsurface_infil_list
 
-        """单位面积过程仿真，并返回结果"""
+        # 面源斑块比例处理
+        block_area, sponge_tpye_area_map = self.cal_sponge_block_area(
+            sponge_block_Dialog)
+        """地块模拟"""
+        self.result,  runoff, pollution, sponge_runoff, sponge_pollution = self.sim(
+            NonPointPollution, GreenRoof, PermeablePavement, BioretentionPonds, ConcaveHerbaceousField,
+            block_area, sponge_tpye_area_map)
+        """结果可视化"""
+        self.show_sponge_block(main, rain, runoff, pollution,
+                               sponge_runoff, sponge_pollution, NonPointPollution.start_dt_str)
+
+        QMessageBox.information(main, '运行完毕', '仿真已完成！')
+        main.sponge_block_sim_flag = True
+
+    def sim(self, NonPointPollution, GreenRoof, PermeablePavement, BioretentionPonds, ConcaveHerbaceousField,
+            block_area, sponge_tpye_area_map):
+        # 单位面积过程仿真，并返回结果
         # 每个设施、面源斑块模拟
         rain, runoff, pollution = NonPointPollution.sim
+        # TODO：临时用这些sim，之后要改的
         GR_runoff, GR_pollution = GreenRoof.sim(runoff, pollution)
         PP_runoff, PP_pollution = PermeablePavement.sim(runoff, pollution)
         BRP_runoff, BRP_pollution = BioretentionPonds.sim(runoff, pollution)
         CHF_runoff, CHF_pollution = ConcaveHerbaceousField.sim(
             runoff, pollution)
-
-        # 面源斑块比例处理
-        block_area, sponge_tpye_area_map = self.cal_sponge_block_area(
-            sponge_block_Dialog)
 
         # 计算斑块径流
         sponge_runoff = sponge_block_runoff(block_area,
@@ -107,10 +165,14 @@ class NonPointControl:
                                                   BRP=BRP_pollution,
                                                   CHF=CHF_pollution,
                                                   )
+        result = {"降雨强度(mm/min)": rain,
+                  "无海绵径流量(mm/min)": runoff[:, 0],
+                  "海绵径流量(mm/min)": sponge_runoff,
+                  }
+        for name, val in sponge_pollution.items():
+            result[name+"浓度"] = val
 
-        """结果可视化"""
-        self.show_sponge_block(main, rain, runoff, pollution,
-                               sponge_runoff, sponge_pollution, NonPointPollution.start_dt_str)
+        return result,  runoff, pollution, sponge_runoff, sponge_pollution
 
     def cal_sponge_block_area(self, sponge_block_Dialog):
         """面源斑块比例处理"""
@@ -125,6 +187,20 @@ class NonPointControl:
             zip(sponge_type_list, sponge_area_list))
 
         return block_area, sponge_tpye_area_map
+
+    def cal_sponge_block_ratio(self, sponge_block_Dialog):
+        """面源斑块比例处理"""
+        tableWidget = sponge_block_Dialog.tableWidget_sponge_setting
+        sponge_type_list = ["绿色屋顶", "生物滞留池", "渗透铺装", "下凹式绿地", "传统斑块"]
+        sponge_ratio_list = [int(tableWidget.item(i, 0).text())
+                             for i in range(tableWidget.rowCount())]
+
+        traditional_ratio = 100 - sum(sponge_ratio_list)
+        sponge_ratio_list.append(traditional_ratio)
+        sponge_tpye_ratio_map = dict(
+            zip(sponge_type_list, sponge_ratio_list))
+
+        return sponge_tpye_ratio_map
 
     def show_sponge_block(self, main, rain, runoff, pollution, sponge_runoff, sponge_pollution, start_dt_str):
         """rain_runoff"""

@@ -13,6 +13,7 @@ class SimdateOptions(QDialog, Ui_SimDates):
         main.dateTime_start_edit = self.dateTime_start_edit
         main.dateTime_end_edit = self.dateTime_end_edit
         main.spinBox_timestep = self.spinBox_timestep
+        main.spinBox_ADP = self.spinBox_ADP
 
         self.accepted.connect(lambda: self.update_sim_datetime(main,))
         self.show()
@@ -31,3 +32,5 @@ class SimdateOptions(QDialog, Ui_SimDates):
             main.dateTime_end_edit.displayFormat())
         # 时间步长hour
         main.time_step = main.spinBox_timestep.value() / 60
+        # 雨前干旱时间day
+        main.ADP = main.spinBox_ADP.value()

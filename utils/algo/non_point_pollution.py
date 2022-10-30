@@ -1,3 +1,4 @@
+from pydoc import pager
 import pandas as pd
 import numpy as np
 from collections import namedtuple
@@ -47,13 +48,15 @@ class NonPointPollution:
         self.start_dt_str = "2022-08-21 00:00"
         self.end_dt_str = "2024-08-21 00:00"
         self.Tstep = 1               # time step (hr)
+        self.ADP = -1  # 雨前干旱时长（day）
 
         self.rainfall = None  # 降雨量，mm/hr
         # 设置循环长度
         self.LoopCount = 0
 
         # 文件路径
-        self.weather_file_path = weather_file_path
+        self.weather_file_path = ''
+        # self.weather_file_path = weather_file_path
 
     @property
     def get_weather_data(self):
@@ -66,9 +69,14 @@ class NonPointPollution:
 
     def change_landuse_params(self, block_Dialog):
         """根据 landuse_type 改变显示的参数值"""
-
-        # 获取土地利用类型对应的索引
         landuse_type = block_Dialog.comboBox_landuse.currentText()
+        if landuse_type == "请选择":
+            QMessageBox.critical(
+                block_Dialog,
+                '错误',
+                "请选择土地利用类型！")
+            return
+        # 获取土地利用类型对应的索引
         lu_ind = np.where(self.landuse_type_list == landuse_type)[0][0]
 
         # Bmax
@@ -95,9 +103,15 @@ class NonPointPollution:
 
     def change_underlyingsurface_params(self, block_Dialog):
         """根据 underlyingsurface_type 改变显示的参数值"""
-
         # 获取下垫面类型对应的索引
         underlyingsurface_type = block_Dialog.comboBox_underlyingsurface.currentText()
+        if underlyingsurface_type == "请选择":
+            QMessageBox.critical(
+                block_Dialog,
+                '错误',
+                "请选择下垫面类型！")
+            return
+
         us_ind = np.where(self.underlyingsurface_type_list ==
                           underlyingsurface_type)[0][0]
 
@@ -135,6 +149,29 @@ class NonPointPollution:
             self.underlyingsurface_infil_list[us_ind])
 
         # return block_Dialog
+    @property
+    def pack_params(self):
+        # 斑块类型
+        params_dict = {
+            "面源斑块类型": {
+                "土地利用类型": self.landuse_type,
+                "下垫面类型": self.underlyingsurface_type
+            },
+        }
+        # 污染物参数
+        lu_ind = np.where(self.landuse_type_list == self.landuse_type)[0][0]
+        us_ind = np.where(self.underlyingsurface_type_list ==
+                          self.underlyingsurface_type)[0][0]
+        params_dict["污染物参数"] = {}
+        for p_name, param in self.Pollution_dict.items():
+            params_dict["污染物参数"][p_name] = {}
+            for p, v in param.items():
+                if p in ["Bmax", "bt"]:
+                    params_dict["污染物参数"][p_name][p] = v[lu_ind]
+                else:
+                    params_dict["污染物参数"][p_name][p] = v[us_ind]
+
+        return params_dict
 
     def update_params(self, block_Dialog):
         """更新模型参数
@@ -369,90 +406,110 @@ class NonPointPollution:
 
     @property
     def sim(self):
-        # TODO:现在是小时的，要换成分钟的
-        # TODO:rain和runoff是相同的。。。
-        """2. 单位面积的径流污染产生过程线模型"""
-        # self.get_weather_data
-        # 2.1 rainfall runoff process simulation
-        # 初始化
+        """单位面积的径流污染产生过程线模型"""
+        """初始化"""
         expand_time = 5*60  # 延长5小时
-        nhour = self.LoopCount + expand_time
-        # nus = len(self.underlyingsurface_type_list)
-        # nlu = len(self.landuse_type_list)
-        nus = 1
-        nlu = 1
+        n_min = self.LoopCount + expand_time
         npl = len(self.Pollution)
 
         rain = np.concatenate(
-            (self.rainfall, np.zeros(expand_time)), axis=0) / 60
-        evap = np.zeros_like(rain) + 0.2  # TODO：是否除以60
+            (self.rainfall, np.zeros(expand_time)), axis=0) / 60  # 单位转换：mm/hr -> mm/min
+        evap = np.zeros_like(rain) + 0.2/60  # mm/min
 
         # 获取 土地利用类型 和下垫面 类型
         lu_ind = np.where(self.landuse_type_list == self.landuse_type)[0][0]
         us_ind = np.where(self.underlyingsurface_type_list ==
                           self.underlyingsurface_type)[0][0]
 
-        usloss = np.array([self.underlyingsurface_loss_list[us_ind]])
-        usinfil = np.array([self.underlyingsurface_infil_list[us_ind]])
+        usloss = self.underlyingsurface_loss_list[us_ind] / 60  # min级别的
+        usinfil = self.underlyingsurface_infil_list[us_ind] / 60  # min级别的
 
-        storage = np.zeros((nhour, nus))
-        runoff = np.zeros((nhour, nus))
-        storage[0, :] = usloss.T
-        # 每个时刻不同下垫面的剩余蓄水能力和径流量动态变化
-        for t in range(1, nhour):
-            for u in range(nus):
-                storage[t, u] = min(usloss[u],
-                                    storage[t-1, u] - rain[t] + evap[t] + usinfil[u])
-                if storage[t, u] < 0:
-                    # 当蓄水能力小于0时，产生径流
-                    runoff[t, u] = 0 - storage[t, u]
-                    storage[t, u] = 0
+        storage = np.zeros((n_min, 1))
+        runoff = np.zeros((n_min, 1))
+        storage[0, 0] = usloss
 
+        """径流计算"""
+        # 每个时刻不同`下垫面`的剩余蓄水能力和径流量动态变化
+        for t in range(1, n_min):
+            storage[t, 0] = min(usloss,
+                                storage[t-1, 0] - rain[t] + evap[t] + usinfil)
+            if storage[t, 0] < 0:
+                # 当蓄水能力小于0时，产生径流
+                runoff[t, 0] = max(0, 0 - storage[t, 0])
+                storage[t, 0] = 0
         # 获取下雨至雨停后径流为0前的数据
         dry_period = runoff[self.LoopCount:]
         zero_runoff = np.where(dry_period == 0)[0][0]
         useful_period = self.LoopCount + int(zero_runoff)
-        useful_runoff = runoff[:useful_period] * 60
         # 与用户定义的仿真周期对比
         dates = pd.date_range(start=self.start_dt_str,
                               end=self.end_dt_str, freq="1min")
-        num_dates = len(dates)
-        useful_period = min(useful_period, num_dates)
+        useful_period = min(useful_period, len(dates))
+        useful_runoff = runoff[:useful_period] * 60  # 单位转换：mm/min -> mm/hr
 
-        # TODO：需要改成污染物浓度，当前是污染物负荷
-        # 每个时刻各个土地利用类型、下垫面类型的每一种污染物含量动态变化
+        """污染物浓度计算"""
+        # 每个时刻每一种污染物含量动态变化
         P = self.Pollution_dict
-        B = np.zeros((useful_period, nus*nlu*npl))
-        W = np.zeros((useful_period, nus*nlu*npl))
-        pollution = dict()
+        B = np.zeros((useful_period, npl))  # 污染物累积量
+        W = np.zeros((useful_period, npl))  # 污染物冲刷量
+        concentration = dict()
+
+        # 计算雨前污染物累积量
+        for p, name in enumerate(self.pollution_type_list):  # 污染物类型
+            if P[name]["EMC"][us_ind] == 0:  # 计算道路、硬地、水体的污染物累积和冲刷
+                if self.ADP == -1:  # 默认污染物累积量为Bmax
+                    B[0, p] = P[name]["Bmax"][lu_ind]
+                else:
+                    """计算污染物累积量
+                    B[0] = min(Bmax, bt * ADP * 24)
+                    """
+                    B[0, p] = \
+                        min(P[name]["Bmax"][lu_ind],
+                            P[name]["bt"][lu_ind] * self.ADP * 24)
+
+                W[0, p] = B[0, p]  # 初始化
+
+        # 计算下雨至雨停后径流为0期间的污染物负荷
         for t in range(1, useful_period):  # 时间
             for p, name in enumerate(self.pollution_type_list):  # 污染物类型
-                for l in range(nlu):  # 土地利用类型
-                    for u in range(nus):  # 下垫面类型
-                        if P[name]["EMC"][u] == 0:  # 污染物EMC的值
-                            if rain[t] == 0:
-                                B[t, p*nlu*nus + l*nus + u] = min(P[name]["Bmax"][l],
-                                                                  B[t-1, p*nlu*nus + l*nus + u] + P[name]["bt"][l])
-                            else:
-                                W[t, p*nlu*nus + l*nus + u] = P[name]["C1"][u] * runoff[t, u]**P[name]["C2"][u] \
-                                    * B[t-1, p*nlu*nus + l*nus + u]
-                                B[t, p*nlu*nus + l*nus + u] = max(0, B[t-1, p*nlu*nus + l*nus + u]
-                                                                  - W[t, p*nlu*nus + l*nus + u])
-                        else:
-                            W[t, p*nlu*nus + l*nus + u] = runoff[t, u] * \
-                                P[name]["EMC"][u]  # 负荷
+                if P[name]["EMC"][us_ind] == 0:  # 计算道路、硬地、水体的污染物累积和冲刷
+                    """计算污染物负荷
+                    W[t] = C1 * runoff[t]^{C2} * B[t-1]
+                    """
+                    W[t, p] = P[name]["C1"][us_ind] * \
+                        runoff[t, 0]**P[name]["C2"][us_ind] * B[t-1, p]
 
+                    """更新污染物累积量
+                    B[t] = max(0, B[t-1] - W[t])
+                    """
+                    B[t, p] = max(0, B[t-1, p] - W[t, p])
+                else:  # 计算屋顶和绿地的冲刷
+                    """计算污染物负荷
+                    W[t] = runoff[t] * EMC
+                    """
+                    W[t, p] = runoff[t, 0] * P[name]["EMC"][us_ind]
+
+        # 计算每个时刻的径流污染物浓度
         for p, name in enumerate(self.pollution_type_list):
-            pollution[name] = W[:, p]
+            if P[name]["EMC"][us_ind] > 0:  # 计算道路、硬地、水体的污染物累积和冲刷
+                concentration[name] = np.array(
+                    [P[name]["EMC"][us_ind]]*useful_period)
+            else:
+                """污染物浓度计算
+                C[t] = W[t] / runoff[t]
+                """
+                concentration[name] = np.divide(W[:, p], runoff[:useful_period, 0],
+                                                out=np.zeros_like(W[:, p]),
+                                                where=runoff[:useful_period, 0] != 0)
 
-        return self.rainfall, useful_runoff, pollution
-        # return rain, runoff, pollution
+        return rain[:useful_period], useful_runoff, concentration
 
     def block_sim(self, main, rain_generate_Dialog, block_Dialog):
         # 面源斑块赋值
         self.start_dt_str = main.start_dt_str
         self.end_dt_str = main.end_dt_str
         self.Tstep = main.time_step
+        self.ADP = main.ADP
 
         # 判断是否选择了路径，若无，则要弹窗
         if hasattr(main, 'weather_file_path'):
@@ -498,6 +555,15 @@ class NonPointPollution:
 
         """结果可视化"""
         self.show_block(rain, runoff, pollution, main)
+
+        self.result = {"降雨强度(mm/min)": rain,
+                       "径流量(mm/min)": runoff[:, 0]}
+        for name, val in pollution.items():
+            self.result[name+"浓度"] = val
+
+        QMessageBox.information(main, '运行完毕', '仿真已完成！')
+
+        main.block_sim_flag = True
 
     def show_block(self, rain, runoff, pollution, main):
         # rainfall

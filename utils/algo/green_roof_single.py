@@ -1,6 +1,6 @@
 from utils.algo.general_functions import (save_dict_to_yaml, check_datetime,
-                                          save_single_sponge_sim_results,
-                                          save_single_sponge_sim_params,
+                                          save_sim_results,
+                                          save_sim_params,
                                           check_datetime_setting,
                                           check_observed_file,
                                           check_weather_file)
@@ -71,8 +71,6 @@ class SingleGreenRoof:
         self.weather_file_path = weather_file_path
 
     def upate_params(self, params):
-
-        # TODO：分离到green_roof_config.py文件中
         # ***************** initialization ******************
         # self.d1_0 = self.d1_0.value()                # initial depth of water stored on the surface (mm)
         # soil layer initial moisture content (volume of water / total volume of soil)
@@ -181,7 +179,7 @@ class SingleGreenRoof:
     def get_weather_data(self):
         # 输入计算蒸散发所需的气象数据
         data = np.loadtxt(self.weather_file_path)
-        self.i0 = data[:, 0]  # 降雨量，mm/hr
+        self.i0 = data[:, 0]  # 降雨量，mm/min
         self.Rsolar = data[:, 1]/3600*10**6  # 太阳辐射，MJ/(m2 h)转换成W/m2
         self.Tair = data[:, 2]  # 气温，℃
         self.gravelT = data[:, 2]  # 蓄水层水文，假定与气温相同，℃
@@ -540,25 +538,13 @@ class SingleGreenRoof:
         # 仿真，并返回结果
         q3 = self.sim
         # 结果可视化
-        self.show_single_sponge_sim_curve(q3, obs=None, NSE=None, main=main)
+        self.show_single_sponge_sim_curve(
+            q3, obs=None, NSE=None, main=main)
 
-        # 结果自动保存
-        sim_results_save_dir, timestamp =\
-            save_single_sponge_sim_results(model_name="greenroof",
-                                           data=q3,
-                                           start_date=self.start_dt_str,
-                                           end_date=self.end_dt_str,
-                                           freq='1min')
+        self.result = {"降雨强度(mm/min)": self.i0, "出流量(mm/min)": q3}
 
-        save_single_sponge_sim_params(model_name="greenroof",
-                                      params_dict=self.pack_params,
-                                      start_date=self.start_dt_str,
-                                      end_date=self.end_dt_str,
-                                      timestamp=timestamp,
-                                      freq='1min')
-
-        QMessageBox.information(
-            main, '运行完毕', '完成！实验参数和结果保存在：\n%s' % (sim_results_save_dir))
+        QMessageBox.information(main, '运行完毕', '仿真已完成！')
+        main.green_roof_single_sim_flag = True
 
     def green_roof_sim_and_val(self, main):
         # TODO：仿真结果很离谱，需要调试
@@ -587,11 +573,9 @@ class SingleGreenRoof:
         QMessageBox.information(main, '运行完毕', '仿真已完成！')
 
     def show_single_sponge_sim_curve(self, q3, obs, NSE, main):
-        # TODO：显示的图片太小，有问题
         width, height = main.green_roof_sim_curve.width(), main.green_roof_sim_curve.height()
-
         F = fig_single_sponge_sim_curve(
-            q3, obs, NSE, self.start_dt_str, self.end_dt_str, width, height)  # 结果可视化
+            q3, obs, "绿色屋顶", self.start_dt_str, self.end_dt_str, width, height)  # 结果可视化
 
         main.scene = QGraphicsScene()  # 创建一个场景
         main.scene.addWidget(F)  # 将图形元素添加到场景中

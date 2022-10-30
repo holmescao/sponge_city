@@ -14,6 +14,7 @@ class BioretentionPonds:
         self.start_dt_str = "2022-08-21 00:00"
         self.end_dt_str = "2022-08-21 06:00"
         self.Tstep = 1/60               # time step (hr),min
+        self.ADP = -1  # 雨前干旱时长（day）
 
         self.underlyingsurface_loss_list = underlyingsurface_loss_list
         self.underlyingsurface_infil_list = underlyingsurface_infil_list
@@ -98,7 +99,7 @@ class BioretentionPonds:
 
         pp_metric = list(pollution.keys())
         sponge_pollution = dict(zip(pp_metric, range(len(pp_metric))))
-        reduction = 0.2
+        reduction = 1
         sponge_runoff[:, 0] = runoff[:, 0] * (1-reduction)
 
         for name, val in pollution.items():

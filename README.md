@@ -22,8 +22,15 @@ pip install -r requirements.txt
 ## 执行
 在`code_root`下，运行
 ```python
+
+
+
 python main_greenroof.py
 ```
 即可打开GUI
 
 **\* 详细的说明见软件使用说明文档。**
+
+
+单体：25~29 00:01 - 00:00   
+地块：25~25 10:00 - 23:00

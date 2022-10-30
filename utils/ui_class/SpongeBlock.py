@@ -6,6 +6,7 @@ from PyQt5 import QtCore
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import numpy as np
+import matplotlib.cm as cm
 
 
 class SpongeBlock(QDialog, Ui_SpongeBlock):
@@ -108,7 +109,7 @@ class SpongeBlock(QDialog, Ui_SpongeBlock):
                 self.tableWidget_sponge_setting, i, [0])
             self.tableWidget_sponge_setting = forbidden(
                 self.tableWidget_sponge_setting, i, [1])
-
+        # TODO：土地利用类型是否也有禁用的？
         # 禁用部分设施
         if underlying_surface in "绿地, 水体":
             # 全部海绵设施均不可用
@@ -207,19 +208,22 @@ class SpongeBlock(QDialog, Ui_SpongeBlock):
 
     def show_sponge_block_compose(self, block_assign, main):
         """画饼图"""
+        # 获取labels
         tableWidget = self.tableWidget_sponge_setting
         row = tableWidget.rowCount()
         labels = [tableWidget.verticalHeaderItem(
             i).text() for i in range(row)]
         labels.append("非海绵区域")
-
         labels = np.array(labels, dtype=object)
-
+        # 每个组成用1种颜色
+        colors = np.array([cm.Set3(i/len(labels)) for i in range(len(labels))])
+        # 获取显示的海绵
         zero_inds = np.where(block_assign == 0, True, False)
         block_assign = block_assign[~zero_inds]
         labels = labels[~zero_inds]
+        colors = colors[~zero_inds]
 
-        F_sponge = fig_sponge_pie(block_assign, labels,
+        F_sponge = fig_sponge_pie(block_assign, labels, colors,
                                   width=self.graphicsView_sponge_setting_show.width(),
                                   height=self.graphicsView_sponge_setting_show.height())
         # sponge
@@ -236,10 +240,9 @@ class SpongeBlock(QDialog, Ui_SpongeBlock):
 def available(tableWidget, row, col_range):
     for col in col_range:
         item0 = tableWidget.item(row, col)
-        # item0.setText("是")
-        item0.setBackground(QBrush(QColor(255, 255, 255)))
         item0.setFlags(QtCore.Qt.ItemFlag(63))
-        tableWidget.setItem(row, 0, item0)
+        item0.setBackground(QBrush(QColor(255, 255, 255)))
+        # tableWidget.setItem(row, 0, item0)
 
     return tableWidget
 
@@ -258,7 +261,6 @@ def forbidden(tableWidget, row, col_range, zero_flag=True):
         item0 = tableWidget.item(row, col)
         if zero_flag:
             item0.setText("0")
-        # item0.setBackground(QBrush(QColor(128,128,128)))
         item0.setFlags(QtCore.Qt.ItemFlag(1))
         item0.setFlags(QtCore.Qt.ItemIsEditable)
 

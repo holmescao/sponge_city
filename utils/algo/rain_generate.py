@@ -24,6 +24,6 @@ def rain_generate(r=0.4, P=2, T=180):
 
     ia = ia[::-1]
 
-    rain = np.concatenate((ia, ib), axis=0)  # mm/h
+    rain = np.concatenate((ia, ib), axis=0)  # mm/hr
 
     return rain

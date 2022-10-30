@@ -222,12 +222,11 @@ def fig_pollution(values, width, height, start_dt_str, freq):
     return F1
 
 
-def fig_sponge_pie(values, labels, width, height):
+def fig_sponge_pie(values, labels, colors, width, height):
     F1 = MyFigure(width=width*0.8, height=height*0.8, dpi=150)
-    # F1.resize(width,height)
+    # F1.resize(width, height)
     F1.axes1 = F1.fig.add_subplot(111)
 
-    colors = np.array([cm.Set3(i/len(values)) for i in range(len(values))])
     # plot pie
     patches, l_text, p_text = \
         F1.axes1.pie(x=values,
@@ -258,7 +257,7 @@ def fig_rain_generate(values, width, height):
     F1.resize(width, height)
     F1.axes1 = F1.fig.add_subplot(111)
 
-    fs = 15
+    fs = 20
 
     ax = F1.axes1
     xx = range(values.shape[0])
@@ -267,10 +266,10 @@ def fig_rain_generate(values, width, height):
     # ax.bar(xx, values, width=1,fc='b',label="降雨强度")
 
     """图片美化"""
-    F1.axes1.legend(fontsize=fs-8)
-    F1.axes1.set_title("芝加哥雨型生成结果")
+    F1.axes1.legend(fontsize=fs)
+    F1.axes1.set_title("芝加哥雨型生成结果", fontsize=fs+2)
     F1.axes1.set_xlabel(u"时间(min)", fontsize=fs-2)
-    F1.axes1.set_ylabel(u"降雨强度 (mm/min)", fontsize=fs-5)
+    F1.axes1.set_ylabel(u"降雨强度 (mm/min)", fontsize=fs-2)
     F1.axes1.tick_params(axis='x', labelsize=fs-3)
     F1.axes1.tick_params(axis='y', labelsize=fs-3)
     F1.axes1.grid(alpha=0.5, linestyle="-.")
@@ -278,7 +277,7 @@ def fig_rain_generate(values, width, height):
     return F1
 
 
-def fig_single_sponge_sim_curve(pred, obs, NSE, start_dt_str, end_dt_str, width, height):
+def fig_single_sponge_sim_curve(pred, obs, title, start_dt_str, end_dt_str, width, height):
 
     F1 = MyFigure(width=width, height=height,
                   dpi=150)
@@ -311,10 +310,11 @@ def fig_single_sponge_sim_curve(pred, obs, NSE, start_dt_str, end_dt_str, width,
     # F1.axes1.set_yticklabels(fontsize=fs-2)
     F1.axes1.tick_params(axis='x', labelsize=fs-2)
     F1.axes1.tick_params(axis='y', labelsize=fs)
-    if NSE is None:
-        F1.axes1.set_title(u"NSE is None", fontsize=fs)
-    else:
-        F1.axes1.set_title(u"NSE=%.4f" % NSE, fontsize=fs)
+    F1.axes1.set_title(u"%s仿真结果" % title, fontsize=fs)
+    # if NSE is None:
+    #     F1.axes1.set_title(u"NSE is None", fontsize=fs)
+    # else:
+    #     F1.axes1.set_title(u"NSE=%.4f" % NSE, fontsize=fs)
 
     F1.axes1.grid(alpha=0.5, linestyle="-.")
     # F1.axes1.set_tight_layout()
